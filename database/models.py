@@ -146,6 +146,18 @@ class Database:
             await db.commit()
             return cursor.lastrowid
 
+
+
+    async def get_order_total_amount(self, order_id: int) -> Optional[float]:
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute('SELECT total_amount FROM orders WHERE id = ?', (order_id,)) as cursor:
+                row = await cursor.fetchone()
+                if row:
+                    return row[0]  # total_amount
+                return None
+
+
+
     async def get_order(self, order_id: int) -> Optional[Dict]:
         async with aiosqlite.connect(self.db_path) as db:
             db.row_factory = aiosqlite.Row
@@ -183,36 +195,57 @@ class Database:
             )
             await db.commit()
 
+
+
+
     async def update_order(self, order_id: int, **kwargs):
-        """Обновление заказа"""
+        """Обновление заявки в базе данных"""
         if not kwargs:
             return
-        
-        # Добавляем pspware_id в список возможных полей для обновления
-        allowed_fields = ['onlypays_id', 'pspware_id', 'status', 'requisites', 'personal_id']
-        
+
+        # Разрешённые для обновления поля (добавлен received_sum)
+        allowed_fields = [
+            'onlypays_id', 'pspware_id', 'status', 'requisites',
+            'personal_id', 'received_sum', 'note', 'operator_notes',
+            'btc_address', 'completed_at', 'is_problematic'
+        ]
+
         set_clause = []
         values = []
-        
+
         for field, value in kwargs.items():
             if field in allowed_fields:
                 set_clause.append(f"{field} = ?")
                 values.append(value)
-        
+            else:
+                logger.warning(f"Attempt to update forbidden field '{field}' in orders table ignored")
+
         if set_clause:
             values.append(order_id)
             query = f"UPDATE orders SET {', '.join(set_clause)} WHERE id = ?"
-            await self.execute_query(query, tuple(values))
 
-    async def get_user_orders(self, user_id: int, limit: int = 10) -> List[Dict]:
+            async with aiosqlite.connect(self.db_path) as db:
+                await db.execute(query, tuple(values))
+                await db.commit()
+
+
+
+
+    async def get_user_orders(self, user_id: int, limit: int = 5) -> List[Dict]:
+        """
+        Получение последних заявок пользователя с сортировкой по дате создания
+        """
         async with aiosqlite.connect(self.db_path) as db:
             db.row_factory = aiosqlite.Row
             async with db.execute('''
-                SELECT * FROM orders WHERE user_id = ? 
-                ORDER BY created_at DESC LIMIT ?
+                SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT ?
             ''', (user_id, limit)) as cursor:
                 rows = await cursor.fetchall()
                 return [dict(row) for row in rows]
+
+
+
+
 
     async def get_setting(self, key: str, default: Any = None) -> Any:
         async with aiosqlite.connect(self.db_path) as db:
@@ -326,32 +359,42 @@ class Database:
                 await db.commit()
                 return [dict(row) for row in rows]
 
+
+
+
+
+
     async def get_statistics(self) -> Dict:
+        """
+        Получение общей статистики системы
+        """
         async with aiosqlite.connect(self.db_path) as db:
+            # Общее количество пользователей
             async with db.execute('SELECT COUNT(*) FROM users') as cursor:
                 total_users = (await cursor.fetchone())[0]
-            
+
+            # Общее количество заявок
             async with db.execute('SELECT COUNT(*) FROM orders') as cursor:
                 total_orders = (await cursor.fetchone())[0]
-            
-            async with db.execute('SELECT COUNT(*) FROM orders WHERE status = "finished"') as cursor:
+
+            # Количество завершённых заявок (статус 'completed')
+            async with db.execute('SELECT COUNT(*) FROM orders WHERE status = "completed"') as cursor:
                 completed_orders = (await cursor.fetchone())[0]
-            
-            async with db.execute('SELECT SUM(total_amount) FROM orders WHERE status = "finished"') as cursor:
+
+            # Общий оборот: сумма total_amount по завершённым заявкам
+            async with db.execute('SELECT SUM(total_amount) FROM orders WHERE status = "completed"') as cursor:
                 total_volume = (await cursor.fetchone())[0] or 0
-            
-            async with db.execute('''
-                SELECT COUNT(*) FROM orders 
-                WHERE DATE(created_at) = DATE('now')
-            ''') as cursor:
+
+            # Количество заявок, созданных сегодня (по created_at)
+            async with db.execute('SELECT COUNT(*) FROM orders WHERE DATE(created_at) = DATE("now")') as cursor:
                 today_orders = (await cursor.fetchone())[0]
-            
-            async with db.execute('''
-                SELECT SUM(total_amount) FROM orders 
-                WHERE DATE(created_at) = DATE('now') AND status = "finished"
-            ''') as cursor:
+
+            # Общий оборот за сегодня по завершённым заявкам
+            async with db.execute('SELECT SUM(total_amount) FROM orders WHERE DATE(created_at) = DATE("now") AND status = "completed"') as cursor:
                 today_volume = (await cursor.fetchone())[0] or 0
-            
+
+            completion_rate = (completed_orders / total_orders * 100) if total_orders > 0 else 0
+
             return {
                 'total_users': total_users,
                 'total_orders': total_orders,
@@ -359,8 +402,13 @@ class Database:
                 'total_volume': total_volume,
                 'today_orders': today_orders,
                 'today_volume': today_volume,
-                'completion_rate': (completed_orders / total_orders * 100) if total_orders > 0 else 0
+                'completion_rate': completion_rate
             }
+
+
+
+
+
 
     async def is_chat_admin(self, chat_id: int, user_id: int) -> bool:
         try:

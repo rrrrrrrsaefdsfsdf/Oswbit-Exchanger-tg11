@@ -425,13 +425,21 @@ async def admin_callback_handler(callback: CallbackQuery, state: FSMContext):
                     ''') as cursor:
                         orders = await cursor.fetchall()
                 
+                status_emoji_map = {
+                    "waiting": "⏳",
+                    "paid_by_client": "💰",
+                    "completed": "✅",
+                    "cancelled": "❌",
+                    "problem": "⚠️"
+                }
+
                 if orders:
                     text = "📋 <b>Последние 10 заявок:</b>\n\n"
                     for order in orders:
                         order_id, user_id, amount, status, created_at, personal_id = order
-                        status_emoji = {"waiting": "⏳", "finished": "✅", "cancelled": "❌", "paid_by_client": "💰"}.get(status, "❓")
+                        emoji = status_emoji_map.get(status, "❓")
                         display_id = personal_id or order_id
-                        text += f"{status_emoji} #{display_id} | {amount:,.0f}₽ | {user_id}\n{created_at[:16]}\n\n"
+                        text += f"{emoji} #{display_id} | {amount:,.0f}₽ | {user_id}\n{created_at[:16]}\n\n"
                 else:
                     text = "📋 <b>Заявки</b>\n\n❌ Заявки не найдены"
                 
@@ -1007,11 +1015,19 @@ async def show_user_info(message: Message, user_id: int):
         f"👥 Рефералов: {user.get('referral_count', 0)}"
     )
     
+    status_emoji_map = {
+        'waiting': '⏳',
+        'paid_by_client': '💰',
+        'completed': '✅',
+        'cancelled': '❌',
+        'problem': '⚠️'
+    }
+
     if orders:
         text += "\n\n📋 <b>Последние заявки:</b>\n"
         for order in orders:
-            status_emoji = {"waiting": "⏳", "finished": "✅", "completed": "✅"}.get(order['status'], "❌")
-            text += f"{status_emoji} #{order['id']} - {order['total_amount']:,.0f} ₽\n"
+            emoji = status_emoji_map.get(order['status'], '❓')
+            text += f"{emoji} #{order['id']} - {order['total_amount']:,.0f} ₽\n"
     
     await message.answer(text, parse_mode="HTML")
 

@@ -5,8 +5,6 @@ from config import config
 logger = logging.getLogger(__name__)
 
 class PSPWareAPI:
-    """Класс для работы с API v2 PSPWare"""
-
     def __init__(self):
         self.base_url = "https://api.pspware.space/merchant/v2"
         self.api_key = config.PSPWARE_API_KEY
@@ -16,126 +14,80 @@ class PSPWareAPI:
             "Content-Type": "application/json"
         }
 
-
-
-
-
-
-
-
-
     async def create_order(self, amount: float, pay_types: list, personal_id: str, order_type: str = "PAY-IN", geos: list = None) -> dict:
-            """
-            Создание заказа в PSPWare API v2
-            
-            Args:
-                amount: Сумма в рублях (число с плавающей точкой)
-                pay_types: Список типов оплаты (например, ['sbp', 'c2c'])
-                personal_id: Уникальный идентификатор заказа
-                order_type: Тип операции ('PAY-IN' или 'PAY-OUT')
-                geos: Список гео (например, ['RU', 'TJK']), по умолчанию ['RU']
-            
-            Returns:
-                dict: Ответ от API с данными заказа или ошибкой
-            """
-            try:
-                url = f"{self.base_url}/orders"
-                payload = {
-                    "sum": amount,
-                    "currency": "RUB",
-                    "order_type": order_type,
-                    "pay_types": pay_types,
-                    "geos": geos or ["RU"],
-                    "merchant_id": self.merchant_id,
-                    "order_id": personal_id,
-                    "description": f"Exchange order {personal_id}"
-                }
-                
-                # Логируем запрос для отладки
-                logger.info(f"PSPWare create_order request: {payload}")
-                
-                if order_type == "PAY-OUT":
-                    payload.pop("pay_types", None)
-                    payload.pop("geos", None)
-                    payload["bank"] = "any-bank"
-                    
-                async with aiohttp.ClientSession() as session:
-                    async with session.post(url, json=payload, headers=self.headers) as response:
-                        response_data = await response.json()
-                        
-                        # Логируем ответ для отладки
-                        logger.info(f"PSPWare create_order response: {response_data}")
-                        
-                        if response.status == 200 and response_data.get("status") == "success":
-                            return {
-                                "success": True,
-                                "data": {
-                                    "id": response_data.get("id"),
-                                    "sum": response_data.get("sum"),  # Учитываем рандомизацию
-                                    "requisite": response_data.get("card", ""),
-                                    "owner": response_data.get("recipient", ""),
-                                    "bank": response_data.get("bankName", ""),
-                                    "pay_type": response_data.get("pay_type", ""),
-                                    "payment_url": response_data.get("payment_url", None),
-                                    "bik": response_data.get("bik", None),
-                                    "geo": response_data.get("geo", ""),
-                                    "status": response_data.get("status", "")
-                                }
-                            }
-                        else:
-                            # Улучшенная обработка ошибок
-                            error_message = "Unknown error"
-                            if response_data.get("detail"):
-                                # Обработка ошибок валидации
-                                if isinstance(response_data["detail"], list):
-                                    errors = []
-                                    for error in response_data["detail"]:
-                                        field = ".".join(str(loc) for loc in error.get("loc", []))
-                                        msg = error.get("msg", "Invalid value")
-                                        errors.append(f"{field}: {msg}")
-                                    error_message = "; ".join(errors)
-                                else:
-                                    error_message = str(response_data["detail"])
-                            elif response_data.get("message"):
-                                error_message = response_data["message"]
-                            
-                            logger.error(f"Failed to create order: {response_data}")
-                            return {
-                                "success": False, 
-                                "error": error_message, 
-                                "status_code": response.status,
-                                "raw_response": response_data
-                            }
-            except Exception as e:
-                logger.error(f"Create order error: {e}")
-                return {"success": False, "error": str(e)}
-
-
-
-
-
-
-
-    async def create_withdrawal(self, address: str, amount: float) -> dict:
-        """
-        Создание заявки на вывод средств в PSPWare API v2
-        
-        Args:
-            address: Адрес для вывода средств
-            amount: Сумма в рублях (число с плавающей точкой)
-        
-        Returns:
-            dict: Ответ от API с данными заявки на вывод или ошибкой
-        """
+        url = f"{self.base_url}/orders"
+        payload = {
+            "sum": amount,
+            "currency": "RUB",
+            "order_type": order_type,
+            "pay_types": pay_types,
+            "geos": geos or ["RU"],
+            "merchant_id": self.merchant_id,
+            "order_id": personal_id,
+            "description": f"Exchange order {personal_id}"
+        }
+        if order_type == "PAY-OUT":
+            payload.pop("pay_types", None)
+            payload.pop("geos", None)
+            payload["bank"] = "any-bank"
+        logger.info(f"[PSPWareAPI] POST {url} Headers: {self.headers} Payload: {payload}")
         try:
-            url = f"{self.base_url}/withdrawal"
-            payload = {
-                "address": address,
-                "sum": amount
-            }
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, json=payload, headers=self.headers) as response:
-                    response_data = await response.json()
+                    text_resp = await response.text()
+                    logger.info(f"[PSPWareAPI] Response status {response.status} Body: {text_resp}")
+                    response_data = await response.json(content_type=None)
+                    if response.status == 200 and response_data.get("status") == "success":
+                        return {
+                            "success": True,
+                            "data": {
+                                "id": response_data.get("id"),
+                                "sum": response_data.get("sum"),
+                                "requisite": response_data.get("card", ""),
+                                "owner": response_data.get("recipient", ""),
+                                "bank": response_data.get("bankName", ""),
+                                "pay_type": response_data.get("pay_type", ""),
+                                "payment_url": response_data.get("payment_url", None),
+                                "bik": response_data.get("bik", None),
+                                "geo": response_data.get("geo", ""),
+                                "status": response_data.get("status", "")
+                            }
+                        }
+                    else:
+                        error_message = "Неизвестная ошибка"
+                        if response_data.get("detail"):
+                            if isinstance(response_data["detail"], list):
+                                errors = []
+                                for error in response_data["detail"]:
+                                    field = ".".join(str(loc) for loc in error.get("loc", []))
+                                    msg = error.get("msg", "Недопустимое значение")
+                                    errors.append(f"{field}: {msg}")
+                                error_message = "; ".join(errors)
+                            else:
+                                error_message = str(response_data["detail"])
+                        elif response_data.get("message"):
+                            error_message = response_data["message"]
+                        logger.error(f"[PSPWareAPI] Ошибка создания заказа: {response_data}")
+                        return {
+                            "success": False,
+                            "error": error_message,
+                            "status_code": response.status,
+                            "raw_response": response_data
+                        }
+        except Exception as e:
+            logger.error(f"[PSPWareAPI] Исключение при создании заказа: {e}")
+            return {"success": False, "error": str(e)}
+
+    async def create_withdrawal(self, address: str, amount: float) -> dict:
+        url = f"{self.base_url}/withdrawal"
+        payload = {"address": address, "sum": amount}
+        logger.info(f"[PSPWareAPI] POST {url} Headers: {self.headers} Payload: {payload}")
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, json=payload, headers=self.headers) as response:
+                    text_resp = await response.text()
+                    logger.info(f"[PSPWareAPI] Response status {response.status} Body: {text_resp}")
+                    response_data = await response.json(content_type=None)
                     if response.status == 200:
                         return {
                             "success": True,
@@ -150,27 +102,21 @@ class PSPWareAPI:
                             }
                         }
                     else:
-                        logger.error(f"Failed to create withdrawal: {response_data}")
-                        return {"success": False, "error": response_data.get("message", "Unknown error"), "status_code": response.status}
+                        logger.error(f"[PSPWareAPI] Ошибка создания заявки на вывод: {response_data}")
+                        return {"success": False, "error": response_data.get("message", "Неизвестная ошибка"), "status_code": response.status}
         except Exception as e:
-            logger.error(f"Create withdrawal error: {e}")
+            logger.error(f"[PSPWareAPI] Исключение при создании заявки на вывод: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_order_status(self, order_id: str) -> dict:
-        """
-        Получение статуса заказа
-        
-        Args:
-            order_id: Идентификатор заказа в PSPWare
-        
-        Returns:
-            dict: Ответ от API с данными статуса или ошибкой
-        """
+        url = f"{self.base_url}/orders/{order_id}"
+        logger.info(f"[PSPWareAPI] GET {url} Headers: {self.headers}")
         try:
-            url = f"{self.base_url}/orders/{order_id}"
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, headers=self.headers) as response:
-                    response_data = await response.json()
+                    text_resp = await response.text()
+                    logger.info(f"[PSPWareAPI] Response status {response.status} Body: {text_resp}")
+                    response_data = await response.json(content_type=None)
                     if response.status == 200:
                         return {
                             "success": True,
@@ -189,48 +135,39 @@ class PSPWareAPI:
                             }
                         }
                     else:
-                        logger.error(f"Failed to get order status: {response_data}")
-                        return {"success": False, "error": response_data.get("message", "Unknown error"), "status_code": response.status}
+                        logger.error(f"[PSPWareAPI] Ошибка получения статуса заказа: {response_data}")
+                        return {"success": False, "error": response_data.get("message", "Неизвестная ошибка"), "status_code": response.status}
         except Exception as e:
-            logger.error(f"Get order status error: {e}")
+            logger.error(f"[PSPWareAPI] Исключение при получении статуса заказа: {e}")
             return {"success": False, "error": str(e)}
 
     async def cancel_order(self, order_id: str) -> dict:
-        """
-        Отмена заказа в PSPWare API v2
-        
-        Args:
-            order_id: Идентификатор заказа в PSPWare
-        
-        Returns:
-            dict: Ответ от API с подтверждением отмены или ошибкой
-        """
+        url = f"{self.base_url}/orders/{order_id}/cancel"
+        logger.info(f"[PSPWareAPI] POST {url} Headers: {self.headers}")
         try:
-            url = f"{self.base_url}/orders/{order_id}/cancel"
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, headers=self.headers) as response:
-                    response_data = await response.json()
+                    text_resp = await response.text()
+                    logger.info(f"[PSPWareAPI] Response status {response.status} Body: {text_resp}")
+                    response_data = await response.json(content_type=None)
                     if response.status == 200 and response_data.get("status") == "success":
                         return {"success": True, "data": {"id": order_id, "status": "canceled"}}
                     else:
-                        logger.error(f"Failed to cancel order: {response_data}")
-                        return {"success": False, "error": response_data.get("message", "Unknown error"), "status_code": response.status}
+                        logger.error(f"[PSPWareAPI] Ошибка отмены заказа: {response_data}")
+                        return {"success": False, "error": response_data.get("message", "Неизвестная ошибка"), "status_code": response.status}
         except Exception as e:
-            logger.error(f"Cancel order error: {e}")
+            logger.error(f"[PSPWareAPI] Исключение при отмене заказа: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_merchant_info(self) -> dict:
-        """
-        Получение информации о мерчанте в PSPWare API v2
-        
-        Returns:
-            dict: Ответ от API с данными мерчанта или ошибкой
-        """
+        url = f"{self.base_url}/merchant/me"
+        logger.info(f"[PSPWareAPI] GET {url} Headers: {self.headers}")
         try:
-            url = f"{self.base_url}/merchant/me"
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, headers=self.headers) as response:
-                    response_data = await response.json()
+                    text_resp = await response.text()
+                    logger.info(f"[PSPWareAPI] Response status {response.status} Body: {text_resp}")
+                    response_data = await response.json(content_type=None)
                     if response.status == 200:
                         return {
                             "success": True,
@@ -243,29 +180,26 @@ class PSPWareAPI:
                             }
                         }
                     else:
-                        logger.error(f"Failed to get merchant info: {response_data}")
-                        return {"success": False, "error": response_data.get("message", "Unknown error"), "status_code": response.status}
+                        logger.error(f"[PSPWareAPI] Ошибка получения информации о мерчанте: {response_data}")
+                        return {"success": False, "error": response_data.get("message", "Неизвестная ошибка"), "status_code": response.status}
         except Exception as e:
-            logger.error(f"Get merchant info error: {e}")
+            logger.error(f"[PSPWareAPI] Исключение при получении информации о мерчанте: {e}")
             return {"success": False, "error": str(e)}
 
     async def health_check(self) -> dict:
-        """
-        Проверка состояния сервиса PSPWare API v2
-        
-        Returns:
-            dict: Ответ от API с состоянием сервиса или ошибкой
-        """
+        url = f"{self.base_url}/health"
+        logger.info(f"[PSPWareAPI] GET {url} Headers: {self.headers}")
         try:
-            url = f"{self.base_url}/health"
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, headers=self.headers) as response:
-                    response_data = await response.json()
+                    text_resp = await response.text()
+                    logger.info(f"[PSPWareAPI] Response status {response.status} Body: {text_resp}")
+                    response_data = await response.json(content_type=None)
                     if response.status == 200 and response_data.get("status") == "ok":
                         return {"success": True, "data": {"status": "ok"}}
                     else:
-                        logger.error(f"Health check failed: {response_data}")
-                        return {"success": False, "error": response_data.get("message", "Service unhealthy"), "status_code": response.status}
+                        logger.error(f"[PSPWareAPI] Проверка состояния сервиса не удалась: {response_data}")
+                        return {"success": False, "error": response_data.get("message", "Сервис недоступен"), "status_code": response.status}
         except Exception as e:
-            logger.error(f"Health check error: {e}")
+            logger.error(f"[PSPWareAPI] Исключение при проверке состояния сервиса: {e}")
             return {"success": False, "error": str(e)}

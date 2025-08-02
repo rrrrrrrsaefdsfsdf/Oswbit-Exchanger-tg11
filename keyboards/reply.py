@@ -11,7 +11,6 @@ class ReplyKeyboards:
         # Первая строка
         builder.row(
             KeyboardButton(text="Купить"),
-            KeyboardButton(text="Продать")
         )
         
         # Вторая строка
@@ -47,25 +46,7 @@ class ReplyKeyboards:
             resize_keyboard=True,
             one_time_keyboard=True
         )
-    
-    @staticmethod
-    def exchange_menu() -> ReplyKeyboardMarkup:
-        """Меню обмена"""
-        builder = ReplyKeyboardBuilder()
-        
-        builder.row(
-            KeyboardButton(text="₽ → ₿ Рубли в Bitcoin"),
-            KeyboardButton(text="₿ → ₽ Bitcoin в рубли")
-        )
-        builder.row(
-            KeyboardButton(text="📊 Мои заявки"),
-            KeyboardButton(text="📈 Курсы валют")
-        )
-        builder.row(
-            KeyboardButton(text="◀️ Главное меню")
-        )
-        
-        return builder.as_markup(resize_keyboard=True)
+  
     
     @staticmethod
     def payment_methods() -> ReplyKeyboardMarkup:
@@ -93,30 +74,12 @@ class ReplyKeyboards:
             KeyboardButton(text="❌ Отменить заявку")
         )
         builder.row(
-            KeyboardButton(text="🔄 Проверить статус"),
-            KeyboardButton(text="◀️ Главное меню")
+            KeyboardButton(text="🔄 Проверить статус")
         )
         
         return builder.as_markup(resize_keyboard=True)
     
-    @staticmethod
-    def contact_menu() -> ReplyKeyboardMarkup:
-        """Меню контактов"""
-        builder = ReplyKeyboardBuilder()
-        
-        builder.row(
-            KeyboardButton(text="📞 Связаться с поддержкой"),
-            KeyboardButton(text="💬 Написать в чат")
-        )
-        builder.row(
-            KeyboardButton(text="🎫 Создать тикет"),
-            KeyboardButton(text="❓ FAQ")
-        )
-        builder.row(
-            KeyboardButton(text="◀️ Главное меню")
-        )
-        
-        return builder.as_markup(resize_keyboard=True)
+
     
     @staticmethod
     def admin_menu() -> ReplyKeyboardMarkup:

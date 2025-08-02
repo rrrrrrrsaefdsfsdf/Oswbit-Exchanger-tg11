@@ -1,5 +1,7 @@
+# handlers/user.py
 import logging
 import asyncio
+import os
 from datetime import datetime
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
@@ -14,35 +16,42 @@ from utils.bitcoin import BitcoinAPI
 from utils.captcha import CaptchaGenerator
 from config import config
 from handlers.operator import (
-    process_onlypays_webhook,
+    notify_operators_new_order,
     notify_operators_paid_order,
     notify_operators_error_order,
     notify_client_payment_received,
     notify_client_order_cancelled
 )
-from api.onlypays_api import onlypays_api
+from api.onlypays_api import OnlyPaysAPI
 from api.pspware_api import PSPWareAPI
+from api.greengo_api import GreengoAPI
+from api.api_manager import PaymentAPIManager
 
 logger = logging.getLogger(__name__)
 router = Router()
+logger.info("User router loaded")
+
+# Инициализация API
+onlypays_api = OnlyPaysAPI(
+    api_id=os.getenv('ONLYPAYS_API_ID'),
+    secret_key=os.getenv('ONLYPAYS_SECRET_KEY'),
+    payment_key=os.getenv('ONLYPAYS_PAYMENT_KEY')
+)
 pspware_api = PSPWareAPI()
+greengo_api = GreengoAPI()
 
-
-
-# В начале файла user.py измените PAY_TYPE_MAPPING на:
-
-PAY_TYPE_MAPPING = {
-    'card': 'c2c',  # Карта к карте
-    'sbp': 'sbp'    # СБП остается СБП
-}
-
-# Также добавьте функцию для логирования при отладке:
-async def log_pspware_request(payment_type: str, mapped_type: str, order_id: int):
-    logger.info(f"Order {order_id}: payment_type={payment_type} -> mapped to PSPWare pay_type={mapped_type}")
+# Инициализация API Manager
+payment_api_manager = PaymentAPIManager([
+    {"api": onlypays_api, "name": "OnlyPays"},
+    {"api": pspware_api, "name": "PSPWare", "pay_type_mapping": {"card": "c2c", "sbp": "sbp"}},
+    {"api": greengo_api, "name": "Greengo", "pay_type_mapping": {"card": "card", "sbp": "sbp"}}
+])
 
 
 
 
+
+# PAY_TYPE_MAPPING is now handled within the API Manager for each API
 class ExchangeStates(StatesGroup):
     waiting_for_amount = State()
     waiting_for_btc_address = State()
@@ -53,157 +62,6 @@ class ExchangeStates(StatesGroup):
     waiting_for_note = State()
 
 db = Database(config.DATABASE_URL)
-
-async def process_onlypays_webhook(webhook_data: dict, bot=None):
-    """Обработка webhook от OnlyPays"""
-    try:
-        order_id = webhook_data.get('personal_id')  # Наш внутренний ID заявки
-        onlypays_id = webhook_data.get('id')
-        status = webhook_data.get('status')
-        received_sum = webhook_data.get('received_sum')
-        
-        if not order_id:
-            logger.error(f"Webhook without personal_id: {webhook_data}")
-            return
-        
-        order = await db.get_order(int(order_id))
-        if not order:
-            logger.error(f"Order not found: {order_id}")
-            return
-        
-        if status == 'finished':
-            await db.update_order(
-                order['id'], 
-                status='paid_by_client',
-                received_sum=received_sum
-            )
-            await notify_operators_paid_order(order, received_sum)
-            await notify_client_payment_received(order)
-        elif status == 'cancelled':
-            await db.update_order(order['id'], status='cancelled')
-            await notify_client_order_cancelled(order)
-    except Exception as e:
-        logger.error(f"Webhook processing error: {e}")
-
-async def notify_operators_paid_order(order: dict, received_sum: float):
-    """Уведомление операторов об оплаченной заявке"""
-    try:
-        display_id = order.get('personal_id', order['id'])
-        text = (
-            f"💰 <b>ЗАЯВКА ОПЛАЧЕНА</b>\n\n"
-            f"🆔 Заявка: #{display_id}\n"
-            f"👤 Клиент: {order.get('user_id', 'N/A')}\n"
-            f"💵 Получено: {received_sum:,.0f} ₽\n"
-            f"💰 Сумма заявки: {order['total_amount']:,.0f} ₽\n"
-            f"₿ К отправке: {order['amount_btc']:.8f} BTC\n"
-            f"📍 Адрес: <code>{order['btc_address']}</code>\n\n"
-            f"⏰ Время: {order['created_at']}\n\n"
-            f"🎯 <b>Требуется отправка Bitcoin!</b>"
-        )
-        builder = InlineKeyboardBuilder()
-        builder.row(
-            InlineKeyboardButton(
-                text="✅ Отправил Bitcoin", 
-                callback_data=f"op_sent_{order['id']}"
-            )
-        )
-        builder.row(
-            InlineKeyboardButton(
-                text="⚠️ Проблема", 
-                callback_data=f"op_problem_{order['id']}"
-            ),
-            InlineKeyboardButton(
-                text="📝 Заметка", 
-                callback_data=f"op_note_{order['id']}"
-            )
-        )
-        from main import bot
-        await bot.send_message(
-            config.OPERATOR_CHAT_ID,
-            text,
-            reply_markup=builder.as_markup(),
-            parse_mode="HTML"
-        )
-    except Exception as e:
-        logger.error(f"Notify operators error: {e}")
-
-async def notify_operators_error_order(order: dict, error_message: str):
-    """Уведомление операторов об ошибке в заявке"""
-    try:
-        display_id = order.get('personal_id', order['id'])
-        text = (
-            f"⚠️ <b>ОШИБКА В ЗАЯВКЕ</b>\n\n"
-            f"🆔 Заявка: #{display_id}\n"
-            f"👤 Клиент: {order.get('user_id', 'N/A')}\n"
-            f"💰 Сумма: {order['total_amount']:,.0f} ₽\n"
-            f"❌ Ошибка: {error_message}\n\n"
-            f"⏰ Время: {order['created_at']}\n\n"
-            f"🔧 <b>Требуется вмешательство!</b>"
-        )
-        builder = InlineKeyboardBuilder()
-        builder.row(
-            InlineKeyboardButton(
-                text="🔧 Обработать", 
-                callback_data=f"op_handle_{order['id']}"
-            ),
-            InlineKeyboardButton(
-                text="❌ Отменить", 
-                callback_data=f"op_cancel_{order['id']}"
-            )
-        )
-        from main import bot
-        await bot.send_message(
-            config.OPERATOR_CHAT_ID,
-            text,
-            reply_markup=builder.as_markup(),
-            parse_mode="HTML"
-        )
-    except Exception as e:
-        logger.error(f"Notify operators error: {e}")
-
-async def notify_client_payment_received(order: dict):
-    """Уведомление клиента о получении платежа"""
-    try:
-        display_id = order.get('personal_id', order['id'])
-        text = (
-            f"✅ <b>Платеж получен!</b>\n\n"
-            f"🆔 Заявка: #{display_id}\n"
-            f"💰 Сумма: {order['total_amount']:,.0f} ₽\n"
-            f"₿ К получению: {order['amount_btc']:.8f} BTC\n\n"
-            f"🔄 <b>Обрабатываем заявку...</b>\n"
-            f"Bitcoin будет отправлен на ваш адрес в течение 1 часа.\n\n"
-            f"📱 Вы получите уведомление о завершении."
-        )
-        from main import bot
-        await bot.send_message(
-            order['user_id'],
-            text,
-            parse_mode="HTML",
-            reply_markup=ReplyKeyboards.main_menu()
-        )
-    except Exception as e:
-        logger.error(f"Notify client error: {e}")
-
-async def notify_client_order_cancelled(order: dict):
-    """Уведомление клиента об отмене заявки"""
-    try:
-        display_id = order.get('personal_id', order['id'])
-        text = (
-            f"❌ <b>Заявка отменена</b>\n\n"
-            f"🆔 Заявка: #{display_id}\n"
-            f"💰 Сумма: {order['total_amount']:,.0f} ₽\n\n"
-            f"Причина: Превышено время ожидания оплаты\n\n"
-            f"Создайте новую заявку для обмена."
-        )
-        from main import bot
-        await bot.send_message(
-            order['user_id'],
-            text,
-            parse_mode="HTML",
-            reply_markup=ReplyKeyboards.main_menu()
-        )
-    except Exception as e:
-        logger.error(f"Notify client cancelled error: {e}")
 
 async def show_main_menu(message_or_callback, is_callback=False):
     default_welcome = (
@@ -223,8 +81,6 @@ async def show_main_menu(message_or_callback, is_callback=False):
         f"📢 НОВОСТНОЙ КАНАЛ ➖ {config.NEWS_CHANNEL}\n"
         f"📝 КАНАЛ ОТЗЫВЫ ➖ {config.REVIEWS_CHANNEL}\n\n"
         f"━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"🎁 БОНУСЫ\n"
-        f"💎 Каждый 10 обмен до 6000₽ в боте БЕЗ КОМИССИИ\n\n"
         f"Выберите действие в меню:"
     )
     welcome_msg = await db.get_setting("welcome_message", default_welcome)
@@ -268,7 +124,7 @@ async def start_handler(message: Message, state: FSMContext):
 
 @router.message(ExchangeStates.waiting_for_captcha)
 async def captcha_handler(message: Message, state: FSMContext):
-    if message.text == "◀️ Главное меню":
+    if message.text == "◶️ Главное меню":
         await state.clear()
         await message.answer("Для использования бота пройдите проверку через /start")
         return
@@ -340,15 +196,6 @@ async def buy_handler(message: Message, state: FSMContext):
         reply_markup=InlineKeyboards.buy_crypto_selection()
     )
 
-@router.message(F.text == "Продать")
-async def sell_handler(message: Message, state: FSMContext):
-    await state.clear()
-    text = "Выберите что хотите продать."
-    await message.answer(
-        text,
-        reply_markup=InlineKeyboards.sell_crypto_selection()
-    )
-
 @router.callback_query(F.data.startswith("buy_"))
 async def buy_crypto_selected(callback: CallbackQuery, state: FSMContext):
     if callback.data == "buy_main_menu":
@@ -374,31 +221,6 @@ async def buy_crypto_selected(callback: CallbackQuery, state: FSMContext):
         )
         await state.set_state(ExchangeStates.waiting_for_amount)
 
-@router.callback_query(F.data.startswith("sell_"))
-async def sell_crypto_selected(callback: CallbackQuery, state: FSMContext):
-    if callback.data == "sell_main_menu":
-        await show_main_menu(callback, is_callback=True)
-        return
-    crypto = callback.data.replace("sell_", "").upper()
-    if crypto == "BTC":
-        await state.update_data(
-            operation="sell",
-            crypto=crypto,
-            direction="crypto_to_rub"
-        )
-        btc_rate = await BitcoinAPI.get_btc_rate()
-        text = (
-            f"💸 <b>Продажа Bitcoin</b>\n\n"
-            f"📊 Текущий курс: {btc_rate:,.0f} ₽\n\n"
-            f"Введите количество BTC или выберите из предложенных:"
-        )
-        await callback.message.edit_text(
-            text,
-            reply_markup=InlineKeyboards.amount_input_keyboard(crypto.lower(), "crypto_to_rub"),
-            parse_mode="HTML"
-        )
-        await state.set_state(ExchangeStates.waiting_for_amount)
-
 @router.callback_query(F.data.startswith("amount_"))
 async def amount_selected(callback: CallbackQuery, state: FSMContext):
     if "back" in callback.data:
@@ -406,8 +228,6 @@ async def amount_selected(callback: CallbackQuery, state: FSMContext):
         operation = data.get("operation", "buy")
         if operation == "buy":
             await buy_handler(callback.message, state)
-        else:
-            await sell_handler(callback.message, state)
         return
     if "main_menu" in callback.data:
         await show_main_menu(callback, is_callback=True)
@@ -424,14 +244,6 @@ async def back_to_buy_selection(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(
         text,
         reply_markup=InlineKeyboards.buy_crypto_selection()
-    )
-
-@router.callback_query(F.data == "back_to_sell_selection")
-async def back_to_sell_selection(callback: CallbackQuery, state: FSMContext):
-    text = "Выберите что хотите продать."
-    await callback.message.edit_text(
-        text,
-        reply_markup=InlineKeyboards.sell_crypto_selection()
     )
 
 @router.message(ExchangeStates.waiting_for_amount)
@@ -526,6 +338,9 @@ async def process_amount_and_show_calculation_for_message(message: Message, stat
         parse_mode="HTML"
     )
 
+
+
+
 @router.callback_query(F.data.startswith("payment_"))
 async def payment_method_selected(callback: CallbackQuery, state: FSMContext):
     if "back" in callback.data:
@@ -559,6 +374,14 @@ async def payment_method_selected(callback: CallbackQuery, state: FSMContext):
         )
     await callback.message.edit_text(text, parse_mode="HTML")
     await state.set_state(ExchangeStates.waiting_for_address)
+
+
+
+
+
+
+
+
 
 @router.message(ExchangeStates.waiting_for_btc_address)
 async def btc_address_handler(message: Message, state: FSMContext):
@@ -597,6 +420,9 @@ async def btc_address_handler(message: Message, state: FSMContext):
     )
     await message.answer(text, reply_markup=ReplyKeyboards.payment_methods(), parse_mode="HTML")
 
+
+
+
 @router.message(ExchangeStates.waiting_for_address)
 async def address_input_handler(message: Message, state: FSMContext):
     address = message.text.strip()
@@ -614,6 +440,11 @@ async def address_input_handler(message: Message, state: FSMContext):
     await state.update_data(address=address)
     order_id = await create_exchange_order(message.from_user.id, state)
     await show_order_confirmation(message, state, order_id)
+
+
+
+
+
 
 async def create_exchange_order(user_id: int, state: FSMContext) -> int:
     data = await state.get_data()
@@ -649,18 +480,78 @@ async def show_order_confirmation(message: Message, state: FSMContext, order_id:
     )
     await state.clear()
 
+async def request_requisites_with_retries(order_id: int, user_id: int, payment_type: str, bot, max_attempts=3, delay_sec=60):
+    order = await db.get_order(order_id)
+    if not order:
+        logger.error(f"Order not found: {order_id}")
+        return False
+    
+    is_sell_order = not order.get('btc_address')
+    
+    for attempt in range(1, max_attempts + 1):
+        try:
+            api_response = await payment_api_manager.create_order(
+                amount=int(await db.get_order_total_amount(order_id)),
+                payment_type=payment_type,
+                personal_id=str(order_id),
+                is_sell_order=is_sell_order
+            )
+            
+            if api_response.get('success'):
+                payment_data = api_response['data']
+                api_name = api_response.get('api_name')
+                requisites_text = (
+                    f"{'💳 Карта' if payment_type == 'card' else '📱 Телефон'}: {payment_data['requisite']}\n"
+                    f"👤 Получатель: {payment_data['owner']}\n"
+                    f"🏛 Банк: {payment_data['bank']}"
+                )
+                update_data = {
+                    'requisites': requisites_text,
+                    'status': 'waiting',
+                    'personal_id': payment_data['id']
+                }
+                if api_name == 'OnlyPays':
+                    update_data['onlypays_id'] = payment_data['id']
+                elif api_name == 'PSPWare':
+                    update_data['pspware_id'] = payment_data['id']
+                elif api_name == 'Greengo':
+                    update_data['greengo_id'] = payment_data['id']
+                
+                await db.update_order(order_id, **update_data)
+                await bot.send_message(
+                    user_id,
+                    f"💳 <b>Ваша заявка #{payment_data['id']} подтверждена!</b>\n\n"
+                    f"💰 К оплате: <b>{await db.get_order_total_amount(order_id):,.0f} ₽</b>\n\n"
+                    f"📋 <b>Реквизиты для оплаты:</b>\n{requisites_text}\n\n"
+                    f"⚠️ <b>Важно:</b>\n"
+                    f"• Переведите точную сумму\n"
+                    f"• После оплаты ожидайте подтверждения\n"
+                    f"• Bitcoin будет отправлен автоматически\n\n"
+                    f"⏰ Заявка действительна 30 минут",
+                    parse_mode="HTML",
+                    reply_markup=ReplyKeyboards.order_menu()
+                )
+                return True
+            else:
+                logger.warning(f"{api_response.get('api_name')} order creation failed on attempt {attempt} for order {order_id}: {api_response.get('error')}")
+        
+        except Exception as e:
+            logger.error(f"Attempt {attempt} failed for order {order_id}: {e}")
+        
+        if attempt < max_attempts:
+            await asyncio.sleep(delay_sec)
 
-
-
-
-
-
-
-
-
-
-
-
+    await db.update_order(order_id, status='error_requisites')
+    error_msg = "❌ Извините, реквизиты для вашей заявки временно недоступны.\nПожалуйста, попробуйте создать заявку позже."
+    if is_sell_order:
+        error_msg = "❌ Извините, сервис продажи временно недоступен.\nПожалуйста, попробуйте позже."
+    
+    await bot.send_message(
+        user_id,
+        error_msg,
+        reply_markup=ReplyKeyboards.main_menu()
+    )
+    return False
 
 @router.callback_query(F.data.startswith(("confirm_order_", "cancel_order_")))
 async def order_confirmation_handler(callback: CallbackQuery, state: FSMContext):
@@ -671,103 +562,19 @@ async def order_confirmation_handler(callback: CallbackQuery, state: FSMContext)
         if not order:
             await callback.message.edit_text("❌ Заявка не найдена")
             return
-        display_id = order.get('personal_id', order_id)
-        if order['total_amount'] and order['payment_type']:
-            api_response = await onlypays_api.create_order(
-                amount=int(order['total_amount']),
-                payment_type=order['payment_type'],
-                personal_id=str(order_id)
+        user_id = order['user_id']
+        payment_type = order.get('payment_type')
+        if order['total_amount'] and payment_type:
+            await callback.message.edit_text(
+                "⏳ Ваш запрос принят. Реквизиты будут отправлены в следующем сообщении.\nВремя ожидания до 4-х минут..."
             )
-            if not api_response.get('success') and api_response.get('error') == 'No available requisites':
-                logger.info(f"No requisites available from OnlyPays for order {order_id}, attempting PSPWare")
-                # Преобразуем payment_type для PSPWare API
-                mapped_pay_type = PAY_TYPE_MAPPING.get(order['payment_type'], order['payment_type'])
-                await log_pspware_request(order['payment_type'], mapped_pay_type, order_id)
-                
-                pspware_response = await pspware_api.create_order(
-                    amount=int(order['total_amount']),
-                    personal_id=str(order_id),
-                    pay_types=[mapped_pay_type]  # Используем исправленный маппинг
-                )
-                if pspware_response.get('success'):
-                    payment_data = pspware_response['data']
-                    requisites_text = (
-                        f"{'💳 Карта' if order['payment_type'] == 'card' else '📱 Телефон'}: {payment_data['requisite']}\n"
-                        f"👤 Получатель: {payment_data['owner']}\n"
-                        f"🏛 Банк: {payment_data['bank']}"
-                    )
-                    await db.update_order(
-                        order_id,
-                        pspware_id=pspware_response['data']['id'],
-                        requisites=requisites_text,
-                        status='waiting',
-                        personal_id=pspware_response['data']['id']
-                    )
-                    text = (
-                        f"💳 <b>Заявка #{pspware_response['data']['id']} подтверждена!</b>\n\n"
-                        f"💰 К оплате: <b>{order['total_amount']:,.0f} ₽</b>\n\n"
-                        f"📋 <b>Реквизиты для оплаты:</b>\n"
-                        f"{requisites_text}\n\n"
-                        f"⚠️ <b>Важно:</b>\n"
-                        f"• Переведите точную сумму\n"
-                        f"• После оплаты ожидайте подтверждения\n"
-                        f"• Bitcoin будет отправлен автоматически\n\n"
-                        f"⏰ Заявка действительна 30 минут"
-                    )
-                else:
-                    logger.error(f"PSPWare order creation failed for order {order_id}: {pspware_response.get('error', 'Unknown error')}")
-                    await callback.message.edit_text(
-                        f"❌ Ошибка создания заявки: {pspware_response.get('error', 'Неизвестная ошибка')}\n\n"
-                        "Попробуйте позже или обратитесь в поддержку."
-                    )
-                    await asyncio.sleep(3)
-                    await callback.bot.send_message(
-                        callback.message.chat.id,
-                        "🎯 Главное меню:",
-                        reply_markup=ReplyKeyboards.main_menu()
-                    )
-                    return
-            elif api_response.get('success'):
-                payment_data = api_response['data']
-                requisites_text = (
-                    f"{'💳 Карта' if order['payment_type'] == 'card' else '📱 Телефон'}: {payment_data['requisite']}\n"
-                    f"👤 Получатель: {payment_data['owner']}\n"
-                    f"🏛 Банк: {payment_data['bank']}"
-                )
-                await db.update_order(
-                    order_id,
-                    onlypays_id=api_response['data']['id'],
-                    requisites=requisites_text,
-                    status='waiting',
-                    personal_id=api_response['data']['id']
-                )
-                text = (
-                    f"💳 <b>Заявка #{api_response['data']['id']} подтверждена!</b>\n\n"
-                    f"💰 К оплате: <b>{order['total_amount']:,.0f} ₽</b>\n\n"
-                    f"📋 <b>Реквизиты для оплаты:</b>\n"
-                    f"{requisites_text}\n\n"
-                    f"⚠️ <b>Важно:</b>\n"
-                    f"• Переведите точную сумму\n"
-                    f"• После оплаты ожидайте подтверждения\n"
-                    f"• Bitcoin будет отправлен автоматически\n\n"
-                    f"⏰ Заявка действительна 30 минут"
-                )
-            else:
-                logger.error(f"OnlyPays order creation failed for order {order_id}: {api_response.get('error', 'Unknown error')}")
-                await callback.message.edit_text(
-                    f"❌ Ошибка создания заявки: {api_response.get('error', 'Неизвестная ошибка')}\n\n"
-                    "Попробуйте позже или обратитесь в поддержку."
-                )
-                await asyncio.sleep(3)
-                await callback.bot.send_message(
-                    callback.message.chat.id,
-                    "🎯 Главное меню:",
-                    reply_markup=ReplyKeyboards.main_menu()
-                )
-                return
+            asyncio.create_task(
+                request_requisites_with_retries(order_id, user_id, payment_type, callback.bot)
+            )
+            return
         else:
             text = (
-                f"✅ <b>Заявка #{display_id} подтверждена!</b>\n\n"
+                f"✅ <b>Заявка #{order.get('personal_id', order_id)} подтверждена!</b>\n\n"
                 f"Ожидайте реквизиты для оплаты.\n"
                 f"Время обработки: 5-15 минут."
             )
@@ -776,6 +583,7 @@ async def order_confirmation_handler(callback: CallbackQuery, state: FSMContext)
         order = await db.get_order(order_id)
         display_id = order.get('personal_id', order_id) if order else order_id
         text = f"❌ Заявка #{display_id} отменена."
+
     await callback.message.edit_text(text, parse_mode="HTML")
     await asyncio.sleep(3)
     await callback.bot.send_message(
@@ -784,15 +592,38 @@ async def order_confirmation_handler(callback: CallbackQuery, state: FSMContext)
         reply_markup=ReplyKeyboards.main_menu()
     )
 
+
+
+
+
+# Также убедитесь, что в payment_method_handler логирование работает правильно
 @router.message(F.text.in_(["💳 Банковская карта", "📱 СБП"]))
 async def payment_method_handler(message: Message, state: FSMContext):
+    logger.info(f"payment_method_handler вызывается для пользователя {message.from_user.id} с текстом: {message.text}")
+
     payment_type = "card" if "карта" in message.text else "sbp"
     data = await state.get_data()
-    COMMISSION_PERCENT = await db.get_commission_percentage()
-    rub_amount = data['rub_amount']
-    total_amount = rub_amount / (1 - COMMISSION_PERCENT / 100)
-    btc_amount = data['btc_amount']
-    btc_rate = data['btc_rate']
+
+    # Проверка наличия данных для создания заказа
+    rub_amount = data.get('rub_amount')
+    btc_amount = data.get('btc_amount')
+    btc_rate = data.get('btc_rate')
+
+    logger.debug(f"Данные из состояния: rub_amount={rub_amount}, btc_amount={btc_amount}, btc_rate={btc_rate}")
+
+    if rub_amount is None or btc_amount is None or btc_rate is None:
+        logger.error(f"Недостаточно данных в состоянии пользователя {message.from_user.id}, прекращаю обработку.")
+        await message.answer(
+            "❌ Ошибка внутренних данных. Попробуйте начать заново через главное меню."
+        )
+        await state.clear()
+        return
+    
+    total_amount = rub_amount / (1 - (await db.get_commission_percentage()) / 100)
+
+    logger.info(f"Создаём заказ: user_id={message.from_user.id}, rub_amount={rub_amount}, btc_amount={btc_amount}, "
+                f"btc_address={data.get('btc_address', data.get('address', ''))}, rate={btc_rate}, total_amount={total_amount}, payment_type={payment_type}")
+    
     order_id = await db.create_order(
         user_id=message.from_user.id,
         amount_rub=rub_amount,
@@ -802,71 +633,67 @@ async def payment_method_handler(message: Message, state: FSMContext):
         total_amount=total_amount,
         payment_type=payment_type
     )
-    api_response = await onlypays_api.create_order(
-        amount=int(total_amount),
-        payment_type=payment_type,
-        personal_id=str(order_id)
-    )
-    if not api_response.get('success') and api_response.get('error') == 'No available requisites':
-        logger.info(f"No requisites available from OnlyPays for order {order_id}, attempting PSPWare")
-        # Преобразуем payment_type для PSPWare API
-        mapped_pay_type = PAY_TYPE_MAPPING.get(payment_type, payment_type)
-        await log_pspware_request(payment_type, mapped_pay_type, order_id)
-        
-        pspware_response = await pspware_api.create_order(
+    logger.info(f"Заказ создан с ID {order_id}")
+
+    # Получаем созданный заказ из БД
+    order = await db.get_order(order_id)
+    logger.debug(f"Данные заказа из БД: {order}")
+
+    # Отправляем уведомление операторам о НОВОЙ заявке
+    try:
+        logger.info(f"Попытка отправить уведомление операторам о новой заявке {order_id}")
+        await notify_operators_new_order(message.bot, order)
+        logger.info(f"Уведомление операторам о новой заявке #{order.get('personal_id', order_id)} успешно отправлено")
+    except Exception as e:
+        logger.error(f"Ошибка при отправке уведомления операторам о новой заявке: {e}")
+
+    # Создаем заказ в платежной системе
+    is_sell_order = not order.get('btc_address')
+    logger.info(f"Создаём платёжный заказ в API. is_sell_order={is_sell_order}, order_id={order_id}")
+
+    try:
+        api_response = await payment_api_manager.create_order(
             amount=int(total_amount),
+            payment_type=payment_type,
             personal_id=str(order_id),
-            pay_types=[mapped_pay_type]  # Используем исправленный маппинг
+            is_sell_order=is_sell_order
         )
-        if pspware_response.get('success'):
-            payment_data = pspware_response['data']
-            requisites_text = (
-                f"{'💳 Карта' if payment_type == 'card' else '📱 Телефон'}: {payment_data['requisite']}\n"
-                f"👤 Получатель: {payment_data['owner']}\n"
-                f"🏛 Банк: {payment_data['bank']}"
-            )
-            await db.update_order(
-                order_id,
-                pspware_id=pspware_response['data']['id'],
-                requisites=requisites_text,
-                personal_id=pspware_response['data']['id']
-            )
-            text = (
-                f"💳 <b>Заявка #{pspware_response['data']['id']} создана!</b>\n\n"
-                f"💰 Сумма к обмену: {rub_amount:,.0f} ₽\n"
-                f"₿ Получите: {btc_amount:.8f} BTC\n"
-                f"💸 К оплате: <b>{total_amount:,.0f} ₽</b>\n\n"
-                f"📋 <b>Реквизиты для оплаты:</b>\n"
-                f"{requisites_text}\n\n"
-                f"⚠️ <b>Важно:</b>\n"
-                f"• Переведите точную сумму\n"
-                f"• После оплаты ожидайте подтверждения\n"
-                f"• Bitcoin будет отправлен автоматически\n\n"
-                f"⏰ Заявка действительна 30 минут"
-            )
-        else:
-            logger.error(f"PSPWare order creation failed for order {order_id}: {pspware_response.get('error', 'Unknown error')}")
-            await message.answer(
-                f"❌ Ошибка создания заявки: {pspware_response.get('error', 'Неизвестная ошибка')}\n\n"
-                "Попробуйте позже или обратитесь в поддержку.",
-                reply_markup=ReplyKeyboards.main_menu()
-            )
-            return
-    elif api_response.get('success'):
+    except Exception as e:
+        logger.error(f"Ошибка при обращении к API платёжного сервиса: {e}")
+        await message.answer("❌ Ошибка связи с платёжным сервисом. Попробуйте позже.")
+        await state.clear()
+        return
+
+    if api_response.get('success'):
         payment_data = api_response['data']
+        api_name = api_response.get('api_name')
         requisites_text = (
             f"{'💳 Карта' if payment_type == 'card' else '📱 Телефон'}: {payment_data['requisite']}\n"
             f"👤 Получатель: {payment_data['owner']}\n"
             f"🏛 Банк: {payment_data['bank']}"
         )
-        await db.update_order(
-            order_id,
-            onlypays_id=api_response['data']['id'],
-            requisites=requisites_text,
-            personal_id=api_response['data']['id']
-        )
+        
+        # Обновляем заказ с данными платежной системы
+        update_data = {
+            'requisites': requisites_text,
+            'personal_id': payment_data['id'],
+            'status': 'waiting'
+        }
+        if api_name == 'OnlyPays':
+            update_data['onlypays_id'] = payment_data['id']
+        elif api_name == 'PSPWare':
+            update_data['pspware_id'] = payment_data['id']
+        elif api_name == 'Greengo':
+            update_data['greengo_id'] = payment_data['id']
+
+        try:
+            await db.update_order(order_id, **update_data)
+            logger.info(f"Обновлены данные заказа ID {order_id} с реквизитами оплаты")
+        except Exception as e:
+            logger.error(f"Ошибка обновления заказа {order_id} в БД: {e}")
+
         text = (
-            f"💳 <b>Заявка #{api_response['data']['id']} создана!</b>\n\n"
+            f"💳 <b>Заявка #{payment_data['id']} создана!</b>\n\n"
             f"💰 Сумма к обмену: {rub_amount:,.0f} ₽\n"
             f"₿ Получите: {btc_amount:.8f} BTC\n"
             f"💸 К оплате: <b>{total_amount:,.0f} ₽</b>\n\n"
@@ -878,27 +705,21 @@ async def payment_method_handler(message: Message, state: FSMContext):
             f"• Bitcoin будет отправлен автоматически\n\n"
             f"⏰ Заявка действительна 30 минут"
         )
+
+        try:
+            await message.answer(text, reply_markup=ReplyKeyboards.order_menu(), parse_mode="HTML")
+            logger.info(f"Пользователю {message.from_user.id} отправлена информация о реквизитах оплаты для заявки #{payment_data['id']}")
+        except Exception as e:
+            logger.error(f"Ошибка отправки пользователю {message.from_user.id} текста реквизитов: {e}")
     else:
-        logger.error(f"OnlyPays order creation failed for order {order_id}: {api_response.get('error', 'Unknown error')}")
+        error_msg = api_response.get('error', 'Неизвестная ошибка')
+        logger.error(f"Платёжный сервис вернул ошибку для заказа {order_id}: {error_msg}")
         await message.answer(
-            f"❌ Ошибка создания заявки: {api_response.get('error', 'Неизвестная ошибка')}\n\n"
-            "Попробуйте позже или обратитесь в поддержку.",
+            f"❌ Ошибка создания заявки: {error_msg}\n\nПопробуйте позже или обратитесь в поддержку.",
             reply_markup=ReplyKeyboards.main_menu()
         )
-        return
-    await message.answer(
-        text, 
-        reply_markup=ReplyKeyboards.order_menu(),
-        parse_mode="HTML"
-    )
+
     await state.clear()
-
-
-
-
-
-
-
 
 
 
@@ -913,29 +734,39 @@ async def check_status_handler(message: Message):
             reply_markup=ReplyKeyboards.main_menu()
         )
         return
+    
     order = orders[0]
     display_id = order.get('personal_id', order['id'])
     
-    if order['status'] == 'waiting' and (order['onlypays_id'] or order['pspware_id']):
-        api_response = None
-        if order['onlypays_id']:
-            api_response = await onlypays_api.get_order_status(order['onlypays_id'])
-        elif order['pspware_id']:
-            api_response = await pspware_api.get_order_status(order['pspware_id'])
+    if order['status'] == 'waiting' and (order['onlypays_id'] or order['pspware_id'] or order['greengo_id']):
+        # Определяем какой API использовать
+        api_name = 'OnlyPays' if order['onlypays_id'] else 'PSPWare' if order['pspware_id'] else 'Greengo'
+        api_order_id = order['onlypays_id'] or order['pspware_id'] or order['greengo_id']
+        
+        api_response = await payment_api_manager.get_order_status(
+            order_id=api_order_id,
+            api_name=api_name
+        )
         
         if api_response and api_response.get('success'):
             status_data = api_response['data']
             if status_data['status'] == 'finished':
+                # Создаем данные webhook для обработки
                 webhook_data = {
-                    'id': order['onlypays_id'] or order['pspware_id'],
+                    'id': api_order_id,
                     'status': 'finished',
                     'personal_id': str(order['id']),
                     'received_sum': status_data.get('received_sum', order['total_amount'])
                 }
+                
+                # Обрабатываем как webhook в зависимости от API
                 if order['onlypays_id']:
                     await process_onlypays_webhook(webhook_data, message.bot)
-                else:
+                elif order['pspware_id']:
                     await process_pspware_webhook(webhook_data, message.bot)
+                else:
+                    await process_greengo_webhook(webhook_data, message.bot)
+                
                 await message.answer(
                     f"✅ <b>Заявка #{display_id} оплачена!</b>\n\n"
                     f"Платеж получен и обрабатывается.\n"
@@ -980,6 +811,7 @@ async def check_status_handler(message: Message):
 
 
 
+
 @router.message(F.text.in_(["✅ Подтвердить заявку", "❌ Отменить заявку"]))
 async def confirm_cancel_order_handler(message: Message):
     orders = await db.get_user_orders(message.from_user.id, 1)
@@ -992,24 +824,23 @@ async def confirm_cancel_order_handler(message: Message):
     order = orders[0]
     display_id = order.get('personal_id', order['id'])
     if "Отменить" in message.text:
-        if order['status'] == 'waiting' and (order['onlypays_id'] or order['pspware_id']):
-            api_response = None
-            if order['onlypays_id']:
-                api_response = await onlypays_api.cancel_order(order['onlypays_id'])
-            elif order['pspware_id']:
-                api_response = await pspware_api.cancel_order(order['pspware_id'])
+        if order['status'] == 'waiting' and (order['onlypays_id'] or order['pspware_id'] or order['greengo_id']):
+            api_response = await payment_api_manager.cancel_order(
+                order_id=order['onlypays_id'] or order['pspware_id'] or order['greengo_id'],
+                api_name='OnlyPays' if order['onlypays_id'] else 'PSPWare' if order['pspware_id'] else 'Greengo'
+            )
             if api_response and api_response.get('success'):
                 await db.update_order(order['id'], status='cancelled')
                 await message.answer(
                     f"❌ Заявка #{display_id} отменена.\n\n"
-                    "Создайте новую заявку для обмена.",
+                    f"Создайте новую заявку для обмена.",
                     reply_markup=ReplyKeyboards.main_menu()
                 )
             else:
                 error_message = api_response.get('error', 'Неизвестная ошибка') if api_response else 'Не удалось отменить заказ'
                 await message.answer(
                     f"❌ Ошибка отмены заявки: {error_message}\n"
-                    "Попробуйте позже или обратитесь в поддержку.",
+                    f"Попробуйте позже или обратитесь в поддержку.",
                     reply_markup=ReplyKeyboards.main_menu()
                 )
         else:
@@ -1023,11 +854,6 @@ async def confirm_cancel_order_handler(message: Message):
             reply_markup=ReplyKeyboards.order_menu()
         )
         await check_status_handler(message)
-
-
-
-
-
 
 @router.message(F.text == "О сервисе ℹ️")
 async def about_handler(message: Message):
@@ -1177,13 +1003,21 @@ async def my_orders_handler(message: Message):
             "Создайте новую заявку на обмен!"
         )
     else:
+        status_emoji_map = {
+            'waiting': '⏳',
+            'paid_by_client': '💰',
+            'completed': '✅',
+            'cancelled': '❌',
+            'problem': '⚠️'
+        }
         text = "📋 <b>Ваши последние заявки:</b>\n\n"
         for order in orders:
-            status_emoji = "⏳" if order['status'] == 'waiting' else "✅" if order['status'] == 'finished' else "❌"
+            emoji = status_emoji_map.get(order['status'], '❓')
             display_id = order.get('personal_id', order['id'])
             text += (
-                f"{status_emoji} Заявка #{display_id}\n"
-                f"💰 {order['total_amount']:,.0f} ₽ → {order['amount_btc']:.6f} BTC\n"
+                f"{emoji} Заявка #{display_id}\n"
+                f"💰 {order['total_amount']:,.0f} ₽\n"
+                f"Статус: {order['status']}\n"
                 f"📅 {order['created_at'][:16]}\n\n"
             )
     await message.answer(text, reply_markup=ReplyKeyboards.main_menu(), parse_mode="HTML")
@@ -1293,7 +1127,6 @@ async def contact_handler(message: Message, state: FSMContext):
 
 @router.callback_query(F.data.startswith("op_sent_"))
 async def operator_sent_handler(callback: CallbackQuery):
-    """Оператор отправил Bitcoin"""
     order_id = int(callback.data.split("_")[-1])
     try:
         await db.update_order(order_id, status='completed')
@@ -1331,7 +1164,6 @@ async def operator_sent_handler(callback: CallbackQuery):
 
 @router.callback_query(F.data.startswith("op_problem_"))
 async def operator_problem_handler(callback: CallbackQuery, state: FSMContext):
-    """Оператор сообщает о проблеме"""
     order_id = int(callback.data.split("_")[-1])
     try:
         await db.update_order(order_id, status='problem')
@@ -1395,7 +1227,6 @@ async def note_handler(message: Message, state: FSMContext):
 
 @router.callback_query(F.data.startswith("op_note_"))
 async def operator_note_handler(callback: CallbackQuery, state: FSMContext):
-    """Оператор хочет добавить заметку"""
     order_id = int(callback.data.split("_")[-1])
     try:
         order = await db.get_order(order_id)
@@ -1420,7 +1251,6 @@ async def operator_note_handler(callback: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data.startswith("op_handle_"))
 async def operator_handle_handler(callback: CallbackQuery):
-    """Оператор обрабатывает проблемную заявку"""
     order_id = int(callback.data.split("_")[-1])
     try:
         order = await db.get_order(order_id)
@@ -1444,11 +1274,8 @@ async def operator_handle_handler(callback: CallbackQuery):
         logger.error(f"Operator handle handler error: {e}")
         await callback.answer("❌ Ошибка")
 
-
-
 @router.callback_query(F.data.startswith("op_cancel_"))
 async def operator_cancel_handler(callback: CallbackQuery):
-    """Оператор отменяет заявку"""
     order_id = int(callback.data.split("_")[-1])
     try:
         order = await db.get_order(order_id)
@@ -1456,16 +1283,13 @@ async def operator_cancel_handler(callback: CallbackQuery):
             await callback.answer("Заявка не найдена")
             return
         display_id = order.get('personal_id', order_id)
-        if order['onlypays_id']:
-            api_response = await onlypays_api.cancel_order(order['onlypays_id'])
-            if not api_response.get('success'):
-                await callback.answer(f"❌ Ошибка отмены: {api_response.get('error', 'Неизвестная ошибка')}")
-                return
-        elif order['pspware_id']:
-            api_response = await pspware_api.cancel_order(order['pspware_id'])
-            if not api_response.get('success'):
-                await callback.answer(f"❌ Ошибка отмены: {api_response.get('error', 'Неизвестная ошибка')}")
-                return
+        api_response = await payment_api_manager.cancel_order(
+            order_id=order['onlypays_id'] or order['pspware_id'] or order['greengo_id'],
+            api_name='OnlyPays' if order['onlypays_id'] else 'PSPWare' if order['pspware_id'] else 'Greengo'
+        )
+        if not api_response.get('success'):
+            await callback.answer(f"❌ Ошибка отмены: {api_response.get('error', 'Неизвестная ошибка')}")
+            return
         await db.update_order(order_id, status='cancelled')
         text = (
             f"❌ <b>Заявка #{display_id} отменена</b>\n\n"
@@ -1482,11 +1306,8 @@ async def operator_cancel_handler(callback: CallbackQuery):
         logger.error(f"Operator cancel handler error: {e}")
         await callback.answer("❌ Ошибка отмены")
 
-
-
 @router.callback_query(F.data.startswith("review_approve_"))
 async def review_approve_handler(callback: CallbackQuery):
-    """Одобрение отзыва администратором"""
     review_id = int(callback.data.split("_")[-1])
     try:
         review = await db.get_review(review_id)
@@ -1516,7 +1337,6 @@ async def review_approve_handler(callback: CallbackQuery):
 
 @router.callback_query(F.data.startswith("review_reject_"))
 async def review_reject_handler(callback: CallbackQuery):
-    """Отклонение отзыва администратором"""
     review_id = int(callback.data.split("_")[-1])
     try:
         await db.update_review(review_id, status='rejected')
@@ -1536,7 +1356,6 @@ async def review_reject_handler(callback: CallbackQuery):
 
 @router.message(Command("broadcast"), F.from_user.id.in_(config.ADMIN_USER_ID))
 async def broadcast_handler(message: Message, state: FSMContext):
-    """Админ-команда для рассылки сообщений всем пользователям"""
     try:
         await message.answer(
             "📢 Введите сообщение для рассылки всем пользователям:",
@@ -1550,7 +1369,6 @@ async def broadcast_handler(message: Message, state: FSMContext):
 
 @router.message(ExchangeStates.waiting_for_contact)
 async def broadcast_message_handler(message: Message, state: FSMContext):
-    """Обработка текста для рассылки"""
     if message.text == "◶️ Главное меню":
         await state.clear()
         await show_main_menu(message)
@@ -1568,7 +1386,7 @@ async def broadcast_message_handler(message: Message, state: FSMContext):
                     disable_web_page_preview=True
                 )
                 success_count += 1
-                await asyncio.sleep(0.05)  # Avoid flood limits
+                await asyncio.sleep(0.05)
             except Exception as e:
                 logger.warning(f"Failed to send broadcast to {user['user_id']}: {e}")
         await message.answer(
@@ -1587,7 +1405,6 @@ async def broadcast_message_handler(message: Message, state: FSMContext):
 
 @router.message(CommandStart(deep_link=True))
 async def deep_link_start_handler(message: Message, state: FSMContext):
-    """Обработка deep link для реферальной программы"""
     try:
         args = message.text.split()
         if len(args) > 1 and args[1].startswith("r-"):
@@ -1628,7 +1445,6 @@ async def deep_link_start_handler(message: Message, state: FSMContext):
 
 @router.message(Command("stats"), F.from_user.id.in_(config.ADMIN_USER_ID))
 async def admin_stats_handler(message: Message):
-    """Админ-команда для просмотра статистики"""
     try:
         total_users = await db.get_total_users()
         total_orders = await db.get_total_orders()
@@ -1641,18 +1457,6 @@ async def admin_stats_handler(message: Message):
             f"✅ Завершенных заявок: {completed_orders:,}\n"
             f"💰 Общий объем: {total_volume_rub:,.0f} ₽"
         )
-
-
-        
-
-
-
-
-
-
-
-
-        
         await message.answer(
             text,
             reply_markup=ReplyKeyboards.main_menu(),
@@ -1667,16 +1471,16 @@ async def admin_stats_handler(message: Message):
 
 @router.message(Command("health"), F.from_user.id.in_(config.ADMIN_USER_ID))
 async def health_check_handler(message: Message):
-    """Админ-команда для проверки состояния сервиса PSPWare"""
     try:
-        response = await pspware_api.health_check()
-        if response.get("success"):
-            status = response["data"]["status"]
-            text = f"✅ Сервис PSPWare: <b>{status}</b>"
-        else:
-            text = f"❌ Ошибка проверки состояния сервиса: {response.get('error', 'Неизвестная ошибка')}"
-            if "status_code" in response:
-                text += f"\nКод ошибки: {response['status_code']}"
+        response = await payment_api_manager.health_check()
+        text = ""
+        for api_name, result in response.items():
+            if result.get("success"):
+                text += f"✅ {api_name}: <b>{result['data']['status']}</b>\n"
+            else:
+                text += f"❌ {api_name}: {result.get('error', 'Неизвестная ошибка')}\n"
+                if "status_code" in result:
+                    text += f"Код ошибки: {result['status_code']}\n"
         await message.answer(
             text,
             reply_markup=ReplyKeyboards.main_menu(),
@@ -1691,15 +1495,56 @@ async def health_check_handler(message: Message):
 
 
 
-async def process_pspware_webhook(webhook_data: dict, bot=None):
+
+
+
+
+async def process_pspware_webhook(webhook_data: dict, bot):
     try:
         order_id = webhook_data.get('personal_id')
-        pspware_id = webhook_data.get('id')
+        status = webhook_data.get('status')
+        received_sum = webhook_data.get('received_sum')
+
+        if not order_id:
+            logger.error(f"Webhook без personal_id: {webhook_data}")
+            return
+
+        order = await db.get_order(int(order_id))
+        if not order:
+            logger.error(f"Заказ не найден: {order_id}")
+            return
+
+        if status == 'finished':
+            await db.update_order(
+                order['id'],
+                status='paid_by_client',
+                received_sum=received_sum
+            )
+            updated_order = await db.get_order(order['id'])  # Получаем обновлённый заказ
+            await notify_operators_paid_order(bot, updated_order, received_sum)
+            await notify_client_payment_received(bot, updated_order)
+        elif status == 'cancelled':
+            await db.update_order(order['id'], status='cancelled')
+            updated_order = await db.get_order(order['id'])
+            await notify_client_order_cancelled(bot, updated_order)
+    except Exception as e:
+        logger.error(f"Ошибка обработки webhook PSPWare: {e}")
+
+
+
+
+
+
+
+async def process_greengo_webhook(webhook_data: dict, bot):
+    try:
+        order_id = webhook_data.get('personal_id')
+        greengo_id = webhook_data.get('id')
         status = webhook_data.get('status')
         received_sum = webhook_data.get('received_sum')
         
         if not order_id:
-            logger.error(f"Webhook without personal_id: {webhook_data}")
+            logger.error(f"Greengo webhook without personal_id: {webhook_data}")
             return
         
         order = await db.get_order(int(order_id))
@@ -1713,14 +1558,78 @@ async def process_pspware_webhook(webhook_data: dict, bot=None):
                 status='paid_by_client',
                 received_sum=received_sum
             )
-            await notify_operators_paid_order(order, received_sum)
-            await notify_client_payment_received(order)
+            updated_order = await db.get_order(order['id'])  # Получаем обновлённый заказ
+            await notify_operators_paid_order(bot, updated_order, received_sum)
+            await notify_client_payment_received(bot, updated_order)
+            logger.info(f"Greengo заявка #{order_id} успешно обработана")
         elif status == 'cancelled':
             await db.update_order(order['id'], status='cancelled')
-            await notify_client_order_cancelled(order)
+            updated_order = await db.get_order(order['id'])
+            await notify_client_order_cancelled(bot, updated_order)
     except Exception as e:
-        logger.error(f"PSPWare webhook processing error: {e}")
-    
+        logger.error(f"Greengo webhook processing error: {e}")
+
+
+
+
+
+
+async def process_onlypays_webhook(webhook_data: dict, bot):
+    """Обработка webhook от OnlyPays"""
+    try:
+        order_id = webhook_data.get('personal_id')
+        status = webhook_data.get('status')
+        received_sum = webhook_data.get('received_sum')
+
+        if not order_id:
+            logger.error(f"OnlyPays webhook без personal_id: {webhook_data}")
+            return
+
+        order = await db.get_order(int(order_id))
+        if not order:
+            logger.error(f"Заказ не найден: {order_id}")
+            return
+
+        if status == 'finished':
+            # Обновляем статус заказа на "оплачен"
+            await db.update_order(
+                order['id'],
+                status='paid_by_client',
+                received_sum=received_sum
+            )
+            
+            # Получаем обновленный заказ из БД
+            updated_order = await db.get_order(order['id'])
+            
+            # Отправляем уведомление операторам об оплаченной заявке
+            await notify_operators_paid_order(bot, updated_order, received_sum)
+            
+            # Уведомляем клиента о получении платежа
+            await notify_client_payment_received(bot, updated_order)
+            
+            logger.info(f"Заявка #{updated_order.get('personal_id', order_id)} успешно оплачена")
+            
+        elif status == 'cancelled':
+            await db.update_order(order['id'], status='cancelled')
+            updated_order = await db.get_order(order['id'])
+            await notify_client_order_cancelled(bot, updated_order)
+            logger.info(f"Заявка #{updated_order.get('personal_id', order_id)} отменена")
+            
+    except Exception as e:
+        logger.error(f"Ошибка обработки OnlyPays webhook: {e}")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

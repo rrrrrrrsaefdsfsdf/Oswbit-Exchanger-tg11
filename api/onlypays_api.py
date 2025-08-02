@@ -1,3 +1,4 @@
+# api/onlypays_api.py
 import logging
 import aiohttp
 from config import config
@@ -10,6 +11,8 @@ class OnlyPaysAPI:
         self.secret_key = secret_key
         self.payment_key = payment_key
         self.base_url = "https://onlypays.net"
+    
+    # ... остальной код без изменений ...
     
     async def create_order(self, amount: int, payment_type: str, personal_id: str = None, trans: bool = False):
         url = f"{self.base_url}/get_requisite"
@@ -30,7 +33,7 @@ class OnlyPaysAPI:
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, json=data) as response:
                     result = await response.json()
-                    logger.info(f"OnlyPays create_order response: {result}")
+                    logger.info(f"OnlyPays create_order response (sum {amount}): {result}")
                     return result
         except Exception as e:
             logger.error(f"OnlyPays create_order error: {e}")

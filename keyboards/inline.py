@@ -191,21 +191,7 @@ class InlineKeyboards:
         
         return builder.as_markup()
 
-    @staticmethod
-    def sell_crypto_selection() -> InlineKeyboardMarkup:
-        """Выбор криптовалюты для продажи"""
-        builder = InlineKeyboardBuilder()
-        
-        # Первая строка
-        builder.row(
-            InlineKeyboardButton(text="BTC", callback_data="sell_btc"),
-        )
-        # Кнопка главная
-        builder.row(
-            InlineKeyboardButton(text="Главная", callback_data="sell_main_menu")
-        )
-        
-        return builder.as_markup()
+
 
     @staticmethod
     def exchange_type_selection(crypto: str) -> InlineKeyboardMarkup:
@@ -290,18 +276,7 @@ class InlineKeyboards:
                     callback_data=f"payment_{crypto}_{direction}_{amount}_sbp"
                 )
             )
-        else:
-            # Продажа криптовалюты  
-            builder.row(
-                InlineKeyboardButton(
-                    text="💳 На карту", 
-                    callback_data=f"payment_{crypto}_{direction}_{amount}_card"
-                ),
-                InlineKeyboardButton(
-                    text="📱 СБП", 
-                    callback_data=f"payment_{crypto}_{direction}_{amount}_sbp"
-                )
-            )
+
         
         builder.row(
             InlineKeyboardButton(text="◀️ Назад", callback_data=f"payment_back_{crypto}_{direction}"),

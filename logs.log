@@ -1,0 +1,479 @@
+2025-08-02 18:11:45,375 [INFO] __main__ - Include user router
+2025-08-02 18:11:45,376 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:11:45,382 [INFO] __main__ - Database initialized
+2025-08-02 18:11:45,687 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:11:45,774 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:12:01,975 [INFO] aiogram.event - Update id=182329886 is handled. Duration 311 ms by bot id=8153616825
+2025-08-02 18:12:03,491 [INFO] aiogram.event - Update id=182329887 is handled. Duration 375 ms by bot id=8153616825
+2025-08-02 18:12:04,666 [INFO] aiogram.event - Update id=182329888 is handled. Duration 360 ms by bot id=8153616825
+2025-08-02 18:12:05,513 [INFO] aiogram.event - Update id=182329889 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:12:07,139 [INFO] aiogram.event - Update id=182329890 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:12:08,211 [INFO] aiogram.event - Update id=182329891 is handled. Duration 157 ms by bot id=8153616825
+2025-08-02 18:12:08,216 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=12
+2025-08-02 18:12:08,216 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:12:08,680 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'l6pf94991i', 'requisite': '+7 928 835 71 75', 'owner': 'Рамазан', 'bank': 'Тинькофф', 'payment_type': 'sbp', 'bank_id': 2}}
+2025-08-02 18:13:53,249 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:13:53,249 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:14:01,205 [INFO] __main__ - Include user router
+2025-08-02 18:14:01,205 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:14:01,252 [INFO] __main__ - Database initialized
+2025-08-02 18:14:01,500 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:14:01,601 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:14:08,972 [INFO] aiogram.event - Update id=182329892 is handled. Duration 672 ms by bot id=8153616825
+2025-08-02 18:14:15,469 [INFO] aiogram.event - Update id=182329893 is handled. Duration 266 ms by bot id=8153616825
+2025-08-02 18:14:16,574 [INFO] aiogram.event - Update id=182329894 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:14:17,797 [INFO] aiogram.event - Update id=182329895 is handled. Duration 452 ms by bot id=8153616825
+2025-08-02 18:14:19,385 [INFO] aiogram.event - Update id=182329896 is handled. Duration 313 ms by bot id=8153616825
+2025-08-02 18:14:20,462 [INFO] aiogram.event - Update id=182329897 is handled. Duration 110 ms by bot id=8153616825
+2025-08-02 18:14:21,747 [INFO] aiogram.event - Update id=182329898 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:14:22,975 [INFO] aiogram.event - Update id=182329899 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 18:14:22,980 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=1
+2025-08-02 18:14:22,980 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:14:23,425 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'duij6wp1b0', 'requisite': '+7 949 403 12 65', 'owner': 'Инна', 'bank': 'Сбер', 'payment_type': 'sbp', 'bank_id': 1}}
+2025-08-02 18:14:31,874 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': 'duij6wp1b0', 'status': 'waiting', 'personal_id': '1', 'received_sum': None}}
+2025-08-02 18:14:31,994 [INFO] aiogram.event - Update id=182329900 is handled. Duration 688 ms by bot id=8153616825
+2025-08-02 18:21:32,210 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:21:32,217 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:21:35,708 [INFO] __main__ - Include user router
+2025-08-02 18:21:35,708 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:21:35,708 [INFO] __main__ - Database initialized
+2025-08-02 18:21:35,998 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:21:36,084 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:21:44,816 [INFO] aiogram.event - Update id=182329901 is handled. Duration 328 ms by bot id=8153616825
+2025-08-02 18:21:46,327 [INFO] aiogram.event - Update id=182329902 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:21:47,824 [INFO] aiogram.event - Update id=182329903 is handled. Duration 344 ms by bot id=8153616825
+2025-08-02 18:21:49,643 [INFO] aiogram.event - Update id=182329904 is handled. Duration 344 ms by bot id=8153616825
+2025-08-02 18:21:50,624 [INFO] aiogram.event - Update id=182329905 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 18:21:51,910 [INFO] aiogram.event - Update id=182329906 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:21:52,992 [INFO] aiogram.event - Update id=182329907 is handled. Duration 141 ms by bot id=8153616825
+2025-08-02 18:21:52,996 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=2
+2025-08-02 18:21:52,996 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:21:54,616 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'wdyemj1rm1', 'requisite': '+7 961 575 32 36', 'owner': 'Роман Р', 'bank': 'Альфа', 'payment_type': 'sbp', 'bank_id': 5}}
+2025-08-02 18:22:00,477 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': 'wdyemj1rm1', 'status': 'waiting', 'personal_id': '2', 'received_sum': None}}
+2025-08-02 18:22:00,690 [INFO] aiogram.event - Update id=182329908 is handled. Duration 609 ms by bot id=8153616825
+2025-08-02 18:25:28,957 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:25:28,958 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:25:32,216 [INFO] __main__ - Include user router
+2025-08-02 18:25:32,216 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:25:32,216 [INFO] __main__ - Database initialized
+2025-08-02 18:25:32,530 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:25:32,620 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:25:37,205 [INFO] aiogram.event - Update id=182329909 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 18:25:39,672 [INFO] aiogram.event - Update id=182329910 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 18:25:42,982 [INFO] aiogram.event - Update id=182329911 is handled. Duration 421 ms by bot id=8153616825
+2025-08-02 18:25:44,317 [INFO] aiogram.event - Update id=182329912 is handled. Duration 140 ms by bot id=8153616825
+2025-08-02 18:25:45,512 [INFO] aiogram.event - Update id=182329913 is handled. Duration 500 ms by bot id=8153616825
+2025-08-02 18:25:46,904 [INFO] aiogram.event - Update id=182329914 is handled. Duration 265 ms by bot id=8153616825
+2025-08-02 18:25:47,985 [INFO] aiogram.event - Update id=182329915 is handled. Duration 139 ms by bot id=8153616825
+2025-08-02 18:25:49,218 [INFO] aiogram.event - Update id=182329916 is handled. Duration 157 ms by bot id=8153616825
+2025-08-02 18:25:50,394 [INFO] aiogram.event - Update id=182329917 is handled. Duration 94 ms by bot id=8153616825
+2025-08-02 18:25:50,400 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=3
+2025-08-02 18:25:50,400 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:25:50,884 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'puv1fnxx3o', 'requisite': '+7 903 963 47 56', 'owner': 'Владислав И', 'bank': 'Тинькофф', 'payment_type': 'sbp', 'bank_id': 2}}
+2025-08-02 18:25:54,267 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': 'puv1fnxx3o', 'status': 'waiting', 'personal_id': '3', 'received_sum': None}}
+2025-08-02 18:25:54,460 [INFO] aiogram.event - Update id=182329918 is handled. Duration 657 ms by bot id=8153616825
+2025-08-02 18:26:02,110 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': 'puv1fnxx3o', 'status': 'waiting', 'personal_id': '3', 'received_sum': None}}
+2025-08-02 18:26:02,233 [INFO] aiogram.event - Update id=182329919 is handled. Duration 671 ms by bot id=8153616825
+2025-08-02 18:26:03,310 [INFO] aiogram.event - Update id=182329920 is not handled. Duration 15 ms by bot id=8153616825
+2025-08-02 18:28:12,204 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:28:12,210 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:28:15,513 [INFO] __main__ - Include user router
+2025-08-02 18:28:15,513 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:28:15,513 [INFO] __main__ - Database initialized
+2025-08-02 18:28:15,787 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:28:15,875 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:28:21,988 [INFO] aiogram.event - Update id=182329921 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 18:28:25,374 [INFO] aiogram.event - Update id=182329922 is handled. Duration 344 ms by bot id=8153616825
+2025-08-02 18:28:26,456 [INFO] aiogram.event - Update id=182329923 is handled. Duration 108 ms by bot id=8153616825
+2025-08-02 18:28:27,831 [INFO] aiogram.event - Update id=182329924 is handled. Duration 358 ms by bot id=8153616825
+2025-08-02 18:28:29,147 [INFO] aiogram.event - Update id=182329925 is handled. Duration 405 ms by bot id=8153616825
+2025-08-02 18:28:30,118 [INFO] aiogram.event - Update id=182329926 is handled. Duration 219 ms by bot id=8153616825
+2025-08-02 18:28:31,593 [INFO] aiogram.event - Update id=182329927 is handled. Duration 219 ms by bot id=8153616825
+2025-08-02 18:28:33,013 [INFO] aiogram.event - Update id=182329928 is handled. Duration 171 ms by bot id=8153616825
+2025-08-02 18:28:33,022 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=4
+2025-08-02 18:28:33,023 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:28:33,615 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'yfibhjmady', 'requisite': '+89194467249', 'owner': 'Мамедов М', 'bank': 'УБРиР', 'payment_type': 'sbp', 'bank_id': 17}}
+2025-08-02 18:31:36,566 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:31:36,566 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:31:39,992 [INFO] __main__ - Include user router
+2025-08-02 18:31:39,992 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:31:39,992 [INFO] __main__ - Database initialized
+2025-08-02 18:31:40,286 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:31:40,375 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:31:44,038 [INFO] aiogram.event - Update id=182329929 is handled. Duration 344 ms by bot id=8153616825
+2025-08-02 18:31:45,009 [INFO] aiogram.event - Update id=182329930 is handled. Duration 188 ms by bot id=8153616825
+2025-08-02 18:31:46,085 [INFO] aiogram.event - Update id=182329931 is handled. Duration 407 ms by bot id=8153616825
+2025-08-02 18:31:54,963 [INFO] aiogram.event - Update id=182329932 is handled. Duration 328 ms by bot id=8153616825
+2025-08-02 18:32:02,858 [INFO] aiogram.event - Update id=182329933 is handled. Duration 108 ms by bot id=8153616825
+2025-08-02 18:32:04,554 [INFO] aiogram.event - Update id=182329934 is handled. Duration 171 ms by bot id=8153616825
+2025-08-02 18:32:05,587 [INFO] aiogram.event - Update id=182329935 is handled. Duration 110 ms by bot id=8153616825
+2025-08-02 18:32:05,597 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=5
+2025-08-02 18:32:05,597 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:32:06,055 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'uuvcujv9r5', 'requisite': '+7 996 422 45 92', 'owner': 'Залимхан А', 'bank': 'Озон', 'payment_type': 'sbp', 'bank_id': 13}}
+2025-08-02 18:32:15,077 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': 'uuvcujv9r5', 'status': 'waiting', 'personal_id': '5', 'received_sum': None}}
+2025-08-02 18:32:15,237 [INFO] aiogram.event - Update id=182329936 is handled. Duration 717 ms by bot id=8153616825
+2025-08-02 18:32:18,338 [INFO] api.onlypays_api - OnlyPays cancel_order response: {'success': True}
+2025-08-02 18:32:18,548 [INFO] aiogram.event - Update id=182329937 is handled. Duration 671 ms by bot id=8153616825
+2025-08-02 18:35:35,743 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:35:35,743 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:35:39,090 [INFO] __main__ - Include user router
+2025-08-02 18:35:39,090 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:35:39,090 [INFO] __main__ - Database initialized
+2025-08-02 18:35:39,384 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:35:39,463 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:35:49,239 [INFO] aiogram.event - Update id=182329938 is handled. Duration 342 ms by bot id=8153616825
+2025-08-02 18:35:49,937 [INFO] aiogram.event - Update id=182329939 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 18:35:51,296 [INFO] aiogram.event - Update id=182329940 is handled. Duration 563 ms by bot id=8153616825
+2025-08-02 18:35:52,661 [INFO] aiogram.event - Update id=182329941 is handled. Duration 265 ms by bot id=8153616825
+2025-08-02 18:35:53,542 [INFO] aiogram.event - Update id=182329942 is handled. Duration 140 ms by bot id=8153616825
+2025-08-02 18:35:54,853 [INFO] aiogram.event - Update id=182329943 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:35:55,832 [INFO] aiogram.event - Update id=182329944 is handled. Duration 140 ms by bot id=8153616825
+2025-08-02 18:35:55,837 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=6
+2025-08-02 18:35:55,837 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:35:56,400 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'ksnpac7gs7', 'requisite': '+7 919 446 72 49', 'owner': 'Мамедов М', 'bank': 'Уралсиб', 'payment_type': 'sbp', 'bank_id': 14}}
+2025-08-02 18:38:24,863 [INFO] aiogram.event - Update id=182329945 is handled. Duration 296 ms by bot id=8153616825
+2025-08-02 18:38:25,452 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:38:25,452 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:38:29,098 [INFO] __main__ - Include user router
+2025-08-02 18:38:29,098 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:38:29,098 [INFO] __main__ - Database initialized
+2025-08-02 18:38:29,373 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:38:29,448 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:38:31,600 [INFO] aiogram.event - Update id=182329946 is handled. Duration 311 ms by bot id=8153616825
+2025-08-02 18:38:32,649 [INFO] aiogram.event - Update id=182329947 is handled. Duration 422 ms by bot id=8153616825
+2025-08-02 18:38:33,756 [INFO] aiogram.event - Update id=182329948 is handled. Duration 344 ms by bot id=8153616825
+2025-08-02 18:38:34,530 [INFO] aiogram.event - Update id=182329949 is handled. Duration 109 ms by bot id=8153616825
+2025-08-02 18:38:36,030 [INFO] aiogram.event - Update id=182329950 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 18:38:36,987 [INFO] aiogram.event - Update id=182329951 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:38:36,991 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=7
+2025-08-02 18:38:36,992 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:38:37,662 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'sd8k5pla5z', 'requisite': '+7 951 440 54 06', 'owner': 'Алексей У', 'bank': 'Сбер', 'payment_type': 'sbp', 'bank_id': 1}}
+2025-08-02 18:40:21,796 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:40:21,796 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:40:25,093 [INFO] __main__ - Include user router
+2025-08-02 18:40:25,093 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:40:25,093 [INFO] __main__ - Database initialized
+2025-08-02 18:40:25,381 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:40:25,463 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:40:30,439 [INFO] aiogram.event - Update id=182329952 is handled. Duration 296 ms by bot id=8153616825
+2025-08-02 18:40:31,481 [INFO] aiogram.event - Update id=182329953 is handled. Duration 139 ms by bot id=8153616825
+2025-08-02 18:40:32,795 [INFO] aiogram.event - Update id=182329954 is handled. Duration 530 ms by bot id=8153616825
+2025-08-02 18:40:33,816 [INFO] aiogram.event - Update id=182329955 is handled. Duration 296 ms by bot id=8153616825
+2025-08-02 18:40:34,723 [INFO] aiogram.event - Update id=182329956 is handled. Duration 141 ms by bot id=8153616825
+2025-08-02 18:40:36,080 [INFO] aiogram.event - Update id=182329957 is handled. Duration 219 ms by bot id=8153616825
+2025-08-02 18:40:37,233 [INFO] aiogram.event - Update id=182329958 is handled. Duration 217 ms by bot id=8153616825
+2025-08-02 18:40:37,240 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=8
+2025-08-02 18:40:37,241 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:40:37,698 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'mtfnq3b8g0', 'requisite': '+7 919 308 91 19', 'owner': 'Данил К.', 'bank': 'Сбер', 'payment_type': 'sbp', 'bank_id': 1}}
+2025-08-02 18:42:24,664 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:42:24,664 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:42:27,809 [INFO] __main__ - Include user router
+2025-08-02 18:42:27,809 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:42:27,824 [INFO] __main__ - Database initialized
+2025-08-02 18:42:28,081 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:42:28,157 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:42:32,891 [INFO] aiogram.event - Update id=182329959 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 18:42:34,020 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': 'mtfnq3b8g0', 'status': 'waiting', 'personal_id': '8', 'received_sum': None}}
+2025-08-02 18:42:34,330 [INFO] aiogram.event - Update id=182329960 is handled. Duration 702 ms by bot id=8153616825
+2025-08-02 18:42:34,939 [INFO] aiogram.event - Update id=182329961 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 18:42:38,966 [INFO] aiogram.event - Update id=182329962 is handled. Duration 157 ms by bot id=8153616825
+2025-08-02 18:42:40,108 [INFO] aiogram.event - Update id=182329963 is handled. Duration 108 ms by bot id=8153616825
+2025-08-02 18:42:41,228 [INFO] aiogram.event - Update id=182329964 is handled. Duration 405 ms by bot id=8153616825
+2025-08-02 18:42:42,647 [INFO] aiogram.event - Update id=182329965 is handled. Duration 297 ms by bot id=8153616825
+2025-08-02 18:42:43,477 [INFO] aiogram.event - Update id=182329966 is handled. Duration 108 ms by bot id=8153616825
+2025-08-02 18:42:44,783 [INFO] aiogram.event - Update id=182329967 is handled. Duration 140 ms by bot id=8153616825
+2025-08-02 18:42:45,822 [INFO] aiogram.event - Update id=182329968 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 18:42:45,829 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=9
+2025-08-02 18:42:45,829 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:42:46,758 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'aknp15h8me', 'requisite': '+7 963 427 51 73', 'owner': 'Хадижат рабаданова', 'bank': 'Тинькофф', 'payment_type': 'sbp', 'bank_id': 2}}
+2025-08-02 18:42:49,824 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:42:49,825 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:47:19,725 [INFO] __main__ - Include user router
+2025-08-02 18:47:19,725 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:47:19,725 [INFO] __main__ - Database initialized
+2025-08-02 18:47:20,002 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:47:20,078 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:47:21,863 [INFO] aiogram.event - Update id=182329969 is handled. Duration 389 ms by bot id=8153616825
+2025-08-02 18:47:22,981 [INFO] aiogram.event - Update id=182329970 is handled. Duration 264 ms by bot id=8153616825
+2025-08-02 18:47:24,016 [INFO] aiogram.event - Update id=182329971 is handled. Duration 407 ms by bot id=8153616825
+2025-08-02 18:47:24,920 [INFO] aiogram.event - Update id=182329972 is handled. Duration 327 ms by bot id=8153616825
+2025-08-02 18:47:25,722 [INFO] aiogram.event - Update id=182329973 is handled. Duration 110 ms by bot id=8153616825
+2025-08-02 18:47:27,333 [INFO] aiogram.event - Update id=182329974 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:47:28,403 [INFO] aiogram.event - Update id=182329975 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 18:47:28,411 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=10
+2025-08-02 18:47:28,411 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 18:47:28,928 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'lr4qlo80sq', 'requisite': '+7 996 422 45 92', 'owner': 'Залимхан А', 'bank': 'Озон', 'payment_type': 'sbp', 'bank_id': 13}}
+2025-08-02 18:51:13,848 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:51:13,848 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:51:18,071 [INFO] __main__ - Include user router
+2025-08-02 18:51:18,071 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:51:18,071 [INFO] __main__ - Database initialized
+2025-08-02 18:51:18,368 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:51:18,457 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:51:29,365 [INFO] handlers.operator - notify_operators_new_order: попытка отправки уведомления заявки #999999 в чат -1002400418722
+2025-08-02 18:51:29,681 [INFO] handlers.operator - notify_operators_new_order: уведомление заявки #999999 успешно отправлено
+2025-08-02 18:51:29,801 [INFO] aiogram.event - Update id=182329976 is handled. Duration 438 ms by bot id=8153616825
+2025-08-02 18:52:22,053 [WARNING] handlers.operator - Запрошены детали несуществующей заявки #999999 оператором 7004205562
+2025-08-02 18:52:22,053 [INFO] aiogram.event - Update id=182329977 is handled. Duration 265 ms by bot id=8153616825
+2025-08-02 18:52:25,228 [INFO] aiogram.event - Update id=182329978 is handled. Duration 233 ms by bot id=8153616825
+2025-08-02 18:52:26,408 [WARNING] handlers.operator - Оператор 7004205562 пытался пометить несуществующую заявку #999999 как оплачена
+2025-08-02 18:52:26,408 [INFO] aiogram.event - Update id=182329979 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 18:52:27,453 [INFO] aiogram.event - Update id=182329980 is handled. Duration 94 ms by bot id=8153616825
+2025-08-02 18:53:43,511 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:53:43,511 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:53:47,056 [INFO] __main__ - Include user router
+2025-08-02 18:53:47,056 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:53:47,056 [INFO] __main__ - Database initialized
+2025-08-02 18:53:47,322 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:53:47,415 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:53:55,439 [INFO] handlers.operator - notify_operators_new_order: попытка отправки уведомления заявки #None в чат -1002400418722
+2025-08-02 18:53:55,780 [INFO] handlers.operator - notify_operators_new_order: уведомление заявки #None успешно отправлено
+2025-08-02 18:53:55,891 [INFO] aiogram.event - Update id=182329981 is handled. Duration 469 ms by bot id=8153616825
+2025-08-02 18:56:19,446 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:56:19,446 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:56:22,967 [INFO] __main__ - Include user router
+2025-08-02 18:56:22,967 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:56:22,972 [INFO] __main__ - Database initialized
+2025-08-02 18:56:23,247 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:56:23,328 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:56:32,960 [INFO] aiogram.event - Update id=182329982 is not handled. Duration 16 ms by bot id=8153616825
+2025-08-02 18:56:36,552 [INFO] aiogram.event - Update id=182329983 is handled. Duration 313 ms by bot id=8153616825
+2025-08-02 18:56:37,444 [INFO] aiogram.event - Update id=182329984 is handled. Duration 186 ms by bot id=8153616825
+2025-08-02 18:56:38,485 [INFO] aiogram.event - Update id=182329985 is handled. Duration 436 ms by bot id=8153616825
+2025-08-02 18:56:40,166 [INFO] aiogram.event - Update id=182329986 is handled. Duration 327 ms by bot id=8153616825
+2025-08-02 18:56:41,048 [INFO] aiogram.event - Update id=182329987 is handled. Duration 109 ms by bot id=8153616825
+2025-08-02 18:56:42,227 [INFO] handlers.operator - notify_operators_new_order: попытка отправки уведомления заявки #None в чат -1002400418722
+2025-08-02 18:56:42,368 [INFO] handlers.operator - notify_operators_new_order: уведомление заявки #None успешно отправлено
+2025-08-02 18:56:42,496 [INFO] aiogram.event - Update id=182329988 is handled. Duration 280 ms by bot id=8153616825
+2025-08-02 18:57:13,751 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:57:13,763 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 18:57:17,097 [INFO] __main__ - Include user router
+2025-08-02 18:57:17,097 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 18:57:17,110 [INFO] __main__ - Database initialized
+2025-08-02 18:57:17,371 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 18:57:17,455 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 18:57:24,689 [INFO] aiogram.event - Update id=182329989 is handled. Duration 359 ms by bot id=8153616825
+2025-08-02 18:57:25,786 [INFO] aiogram.event - Update id=182329990 is handled. Duration 469 ms by bot id=8153616825
+2025-08-02 18:57:28,668 [INFO] aiogram.event - Update id=182329991 is handled. Duration 280 ms by bot id=8153616825
+2025-08-02 18:57:29,562 [INFO] aiogram.event - Update id=182329992 is handled. Duration 109 ms by bot id=8153616825
+2025-08-02 18:57:31,016 [INFO] handlers.operator - notify_operators_new_order: попытка отправки уведомления заявки #None в чат -1002400418722
+2025-08-02 18:57:31,133 [INFO] handlers.operator - notify_operators_new_order: уведомление заявки #None успешно отправлено
+2025-08-02 18:57:31,242 [INFO] aiogram.event - Update id=182329993 is handled. Duration 266 ms by bot id=8153616825
+2025-08-02 18:57:37,597 [INFO] handlers.operator - Оператор 7004205562 получил детали заявки #None
+2025-08-02 18:57:37,597 [INFO] aiogram.event - Update id=182329994 is handled. Duration 375 ms by bot id=8153616825
+2025-08-02 19:00:44,492 [INFO] aiogram.event - Update id=182329995 is handled. Duration 297 ms by bot id=8153616825
+2025-08-02 19:00:46,099 [INFO] aiogram.event - Update id=182329996 is handled. Duration 485 ms by bot id=8153616825
+2025-08-02 19:00:47,792 [INFO] aiogram.event - Update id=182329997 is handled. Duration 313 ms by bot id=8153616825
+2025-08-02 19:00:49,881 [INFO] aiogram.event - Update id=182329998 is handled. Duration 109 ms by bot id=8153616825
+2025-08-02 19:00:59,963 [INFO] handlers.operator - notify_operators_new_order: попытка отправки уведомления заявки #None в чат -1002400418722
+2025-08-02 19:01:00,135 [INFO] handlers.operator - notify_operators_new_order: уведомление заявки #None успешно отправлено
+2025-08-02 19:01:00,280 [INFO] aiogram.event - Update id=182329999 is handled. Duration 344 ms by bot id=8153616825
+2025-08-02 19:01:09,505 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:01:09,505 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 19:01:12,816 [INFO] __main__ - Include user router
+2025-08-02 19:01:12,817 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:01:12,822 [INFO] __main__ - Database initialized
+2025-08-02 19:01:13,075 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:01:13,153 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:01:16,528 [INFO] aiogram.event - Update id=182330000 is handled. Duration 311 ms by bot id=8153616825
+2025-08-02 19:01:17,694 [INFO] aiogram.event - Update id=182330001 is handled. Duration 342 ms by bot id=8153616825
+2025-08-02 19:01:18,767 [INFO] aiogram.event - Update id=182330002 is handled. Duration 296 ms by bot id=8153616825
+2025-08-02 19:01:19,494 [INFO] aiogram.event - Update id=182330003 is handled. Duration 109 ms by bot id=8153616825
+2025-08-02 19:01:20,921 [INFO] aiogram.event - Update id=182330004 is handled. Duration 140 ms by bot id=8153616825
+2025-08-02 19:01:21,957 [INFO] aiogram.event - Update id=182330005 is handled. Duration 94 ms by bot id=8153616825
+2025-08-02 19:01:21,966 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=15
+2025-08-02 19:01:21,967 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 19:01:22,571 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'jmyt93aw9s', 'requisite': '+7 906 959 11 46', 'owner': 'Валерия С', 'bank': 'Тинькофф', 'payment_type': 'sbp', 'bank_id': 2}}
+2025-08-02 19:01:32,443 [INFO] aiogram.event - Update id=182330006 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 19:01:36,647 [INFO] aiogram.event - Update id=182330007 is not handled. Duration 30 ms by bot id=8153616825
+2025-08-02 19:03:07,486 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 19:03:07,486 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:03:38,203 [INFO] __main__ - Include user router
+2025-08-02 19:03:38,203 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:03:38,203 [INFO] __main__ - Database initialized
+2025-08-02 19:03:38,491 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:03:38,595 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:03:42,037 [INFO] aiogram.event - Update id=182330008 is handled. Duration 280 ms by bot id=8153616825
+2025-08-02 19:03:46,628 [INFO] aiogram.event - Update id=182330009 is handled. Duration 109 ms by bot id=8153616825
+2025-08-02 19:03:48,550 [INFO] aiogram.event - Update id=182330010 is handled. Duration 375 ms by bot id=8153616825
+2025-08-02 19:03:49,851 [INFO] aiogram.event - Update id=182330011 is handled. Duration 108 ms by bot id=8153616825
+2025-08-02 19:03:51,132 [INFO] aiogram.event - Update id=182330012 is handled. Duration 94 ms by bot id=8153616825
+2025-08-02 19:03:55,227 [INFO] aiogram.event - Update id=182330013 is handled. Duration 139 ms by bot id=8153616825
+2025-08-02 19:03:56,382 [INFO] aiogram.event - Update id=182330014 is handled. Duration 140 ms by bot id=8153616825
+2025-08-02 19:03:58,263 [INFO] aiogram.event - Update id=182330015 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 19:03:59,582 [INFO] aiogram.event - Update id=182330016 is handled. Duration 108 ms by bot id=8153616825
+2025-08-02 19:04:01,018 [INFO] aiogram.event - Update id=182330017 is handled. Duration 421 ms by bot id=8153616825
+2025-08-02 19:04:02,274 [INFO] aiogram.event - Update id=182330018 is handled. Duration 297 ms by bot id=8153616825
+2025-08-02 19:04:04,342 [INFO] aiogram.event - Update id=182330019 is handled. Duration 110 ms by bot id=8153616825
+2025-08-02 19:04:07,675 [INFO] aiogram.event - Update id=182330020 is handled. Duration 234 ms by bot id=8153616825
+2025-08-02 19:04:09,799 [ERROR] handlers.admin - Review moderation error: 'Database' object has no attribute 'update_review_status'
+2025-08-02 19:04:09,889 [INFO] aiogram.event - Update id=182330021 is handled. Duration 94 ms by bot id=8153616825
+2025-08-02 19:04:13,443 [ERROR] handlers.admin - Review moderation error: 'Database' object has no attribute 'update_review_status'
+2025-08-02 19:04:13,548 [INFO] aiogram.event - Update id=182330022 is handled. Duration 109 ms by bot id=8153616825
+2025-08-02 19:04:26,794 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 19:04:26,794 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:04:30,087 [INFO] __main__ - Include user router
+2025-08-02 19:04:30,087 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:04:30,087 [INFO] __main__ - Database initialized
+2025-08-02 19:04:30,373 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:04:30,462 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:04:32,045 [INFO] aiogram.event - Update id=182330023 is handled. Duration 609 ms by bot id=8153616825
+2025-08-02 19:04:43,385 [INFO] aiogram.event - Update id=182330024 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 19:04:44,639 [INFO] aiogram.event - Update id=182330025 is handled. Duration 421 ms by bot id=8153616825
+2025-08-02 19:04:47,995 [INFO] aiogram.event - Update id=182330026 is handled. Duration 297 ms by bot id=8153616825
+2025-08-02 19:04:49,046 [INFO] aiogram.event - Update id=182330027 is handled. Duration 171 ms by bot id=8153616825
+2025-08-02 19:04:50,650 [INFO] aiogram.event - Update id=182330028 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 19:04:51,674 [INFO] aiogram.event - Update id=182330029 is handled. Duration 140 ms by bot id=8153616825
+2025-08-02 19:04:51,679 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=16
+2025-08-02 19:04:51,680 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 19:04:52,131 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'pbh0j6chsj', 'requisite': '+7 904 533 23 03', 'owner': 'Давыденко Оксана', 'bank': 'Тинькофф', 'payment_type': 'sbp', 'bank_id': 2}}
+2025-08-02 19:05:08,076 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': 'pbh0j6chsj', 'status': 'waiting', 'personal_id': '16', 'received_sum': None}}
+2025-08-02 19:05:08,361 [INFO] aiogram.event - Update id=182330030 is handled. Duration 1061 ms by bot id=8153616825
+2025-08-02 19:13:43,067 [INFO] __main__ - Include user router
+2025-08-02 19:13:43,067 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:13:43,088 [INFO] __main__ - Database initialized
+2025-08-02 19:13:43,383 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:13:43,474 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:13:55,614 [INFO] aiogram.event - Update id=182330031 is handled. Duration 359 ms by bot id=8153616825
+2025-08-02 19:13:56,606 [INFO] aiogram.event - Update id=182330032 is handled. Duration 109 ms by bot id=8153616825
+2025-08-02 19:13:57,636 [INFO] aiogram.event - Update id=182330033 is handled. Duration 329 ms by bot id=8153616825
+2025-08-02 19:13:59,016 [INFO] aiogram.event - Update id=182330034 is handled. Duration 297 ms by bot id=8153616825
+2025-08-02 19:13:59,879 [INFO] aiogram.event - Update id=182330035 is handled. Duration 108 ms by bot id=8153616825
+2025-08-02 19:14:01,141 [INFO] aiogram.event - Update id=182330036 is handled. Duration 141 ms by bot id=8153616825
+2025-08-02 19:14:02,354 [INFO] aiogram.event - Update id=182330037 is handled. Duration 234 ms by bot id=8153616825
+2025-08-02 19:14:02,360 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=17
+2025-08-02 19:14:02,360 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 19:14:02,962 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': '20jiqucsx8', 'requisite': '+7 951 440 54 06', 'owner': 'Алексей У', 'bank': 'Сбер', 'payment_type': 'sbp', 'bank_id': 1}}
+2025-08-02 19:14:09,936 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': '20jiqucsx8', 'status': 'waiting', 'personal_id': '17', 'received_sum': None}}
+2025-08-02 19:14:10,054 [INFO] aiogram.event - Update id=182330038 is handled. Duration 702 ms by bot id=8153616825
+2025-08-02 19:14:12,701 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': '20jiqucsx8', 'status': 'waiting', 'personal_id': '17', 'received_sum': None}}
+2025-08-02 19:14:12,815 [INFO] aiogram.event - Update id=182330039 is handled. Duration 500 ms by bot id=8153616825
+2025-08-02 19:18:58,606 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 19:18:58,606 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:19:01,998 [INFO] __main__ - Include user router
+2025-08-02 19:19:01,998 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:19:02,014 [INFO] __main__ - Database initialized
+2025-08-02 19:19:02,294 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:19:02,378 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:19:08,332 [INFO] aiogram.event - Update id=182330040 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 19:19:14,625 [INFO] aiogram.event - Update id=182330041 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 19:19:22,104 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 19:19:22,104 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:19:26,014 [INFO] __main__ - Include user router
+2025-08-02 19:19:26,015 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:19:26,019 [INFO] __main__ - Database initialized
+2025-08-02 19:19:26,301 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:19:26,392 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:19:33,247 [INFO] aiogram.event - Update id=182330042 is handled. Duration 422 ms by bot id=8153616825
+2025-08-02 19:19:34,073 [INFO] aiogram.event - Update id=182330043 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 19:19:37,685 [INFO] aiogram.event - Update id=182330044 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 19:19:39,888 [INFO] aiogram.event - Update id=182330045 is not handled. Duration 0 ms by bot id=8153616825
+2025-08-02 19:19:42,398 [INFO] aiogram.event - Update id=182330046 is handled. Duration 139 ms by bot id=8153616825
+2025-08-02 19:19:52,782 [ERROR] handlers.user - Ошибка обработки OnlyPays webhook: no such column: received_sum
+2025-08-02 19:19:52,944 [INFO] aiogram.event - Update id=182330047 is handled. Duration 344 ms by bot id=8153616825
+2025-08-02 19:20:12,985 [ERROR] handlers.user - Ошибка обработки OnlyPays webhook: no such column: received_sum
+2025-08-02 19:20:13,110 [INFO] aiogram.event - Update id=182330048 is handled. Duration 437 ms by bot id=8153616825
+2025-08-02 19:20:16,267 [INFO] aiogram.event - Update id=182330049 is handled. Duration 203 ms by bot id=8153616825
+2025-08-02 19:20:17,449 [INFO] aiogram.event - Update id=182330050 is handled. Duration 437 ms by bot id=8153616825
+2025-08-02 19:20:18,580 [INFO] aiogram.event - Update id=182330051 is handled. Duration 281 ms by bot id=8153616825
+2025-08-02 19:20:19,439 [INFO] aiogram.event - Update id=182330052 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 19:20:24,402 [INFO] aiogram.event - Update id=182330053 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 19:20:25,661 [INFO] aiogram.event - Update id=182330054 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 19:20:25,665 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=18
+2025-08-02 19:20:25,665 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 19:20:26,265 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': '2c5l6rf06w', 'requisite': '+7 982 241 93 41', 'owner': 'Лушников Д', 'bank': 'Озон', 'payment_type': 'sbp', 'bank_id': 13}}
+2025-08-02 19:20:34,235 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': '2c5l6rf06w', 'status': 'waiting', 'personal_id': '18', 'received_sum': None}}
+2025-08-02 19:20:34,412 [INFO] aiogram.event - Update id=182330055 is handled. Duration 562 ms by bot id=8153616825
+2025-08-02 19:20:45,200 [ERROR] handlers.user - Ошибка обработки OnlyPays webhook: no such column: received_sum
+2025-08-02 19:20:45,312 [INFO] aiogram.event - Update id=182330056 is handled. Duration 218 ms by bot id=8153616825
+2025-08-02 19:33:18,424 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:33:18,429 [INFO] __main__ - Database initialized successfully
+2025-08-02 19:33:18,717 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:33:18,803 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:33:18,888 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:18,889 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8153616825)
+2025-08-02 19:33:23,004 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:23,004 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8153616825)
+2025-08-02 19:33:24,096 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:24,096 [WARNING] aiogram.dispatcher - Sleep for 1.498991 seconds and try again... (tryings = 1, bot id = 8153616825)
+2025-08-02 19:33:28,438 [INFO] aiogram.dispatcher - Connection established (tryings = 2, bot id = 8153616825)
+2025-08-02 19:33:28,692 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:28,692 [WARNING] aiogram.dispatcher - Sleep for 1.202364 seconds and try again... (tryings = 1, bot id = 8153616825)
+2025-08-02 19:33:28,753 [INFO] aiogram.event - Update id=182330057 is handled. Duration 312 ms by bot id=8153616825
+2025-08-02 19:33:29,992 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:29,992 [WARNING] aiogram.dispatcher - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8153616825)
+2025-08-02 19:33:34,087 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:34,087 [WARNING] aiogram.dispatcher - Sleep for 1.485252 seconds and try again... (tryings = 2, bot id = 8153616825)
+2025-08-02 19:33:35,656 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:35,657 [WARNING] aiogram.dispatcher - Sleep for 1.271228 seconds and try again... (tryings = 1, bot id = 8153616825)
+2025-08-02 19:33:40,023 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:40,023 [WARNING] aiogram.dispatcher - Sleep for 1.848566 seconds and try again... (tryings = 3, bot id = 8153616825)
+2025-08-02 19:33:41,968 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:41,968 [WARNING] aiogram.dispatcher - Sleep for 1.670714 seconds and try again... (tryings = 2, bot id = 8153616825)
+2025-08-02 19:33:46,728 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:46,728 [WARNING] aiogram.dispatcher - Sleep for 2.434777 seconds and try again... (tryings = 4, bot id = 8153616825)
+2025-08-02 19:33:49,244 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:49,244 [WARNING] aiogram.dispatcher - Sleep for 2.191084 seconds and try again... (tryings = 3, bot id = 8153616825)
+2025-08-02 19:33:54,516 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:54,516 [WARNING] aiogram.dispatcher - Sleep for 3.354300 seconds and try again... (tryings = 5, bot id = 8153616825)
+2025-08-02 19:33:57,956 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:33:57,957 [WARNING] aiogram.dispatcher - Sleep for 3.010914 seconds and try again... (tryings = 4, bot id = 8153616825)
+2025-08-02 19:34:01,066 [ERROR] aiogram.dispatcher - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-08-02 19:34:01,066 [WARNING] aiogram.dispatcher - Sleep for 4.374474 seconds and try again... (tryings = 6, bot id = 8153616825)
+2025-08-02 19:34:18,388 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:34:18,404 [INFO] __main__ - Database initialized successfully
+2025-08-02 19:34:18,697 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:34:18,783 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:34:31,141 [INFO] aiogram.event - Update id=182330058 is handled. Duration 1141 ms by bot id=8153616825
+2025-08-02 19:34:32,694 [INFO] aiogram.event - Update id=182330059 is handled. Duration 140 ms by bot id=8153616825
+2025-08-02 19:34:34,001 [INFO] aiogram.event - Update id=182330060 is handled. Duration 312 ms by bot id=8153616825
+2025-08-02 19:35:44,155 [INFO] aiogram.event - Update id=182330061 is handled. Duration 312 ms by bot id=8153616825
+2025-08-02 19:35:45,972 [INFO] aiogram.event - Update id=182330062 is handled. Duration 327 ms by bot id=8153616825
+2025-08-02 19:35:47,994 [INFO] aiogram.event - Update id=182330063 is handled. Duration 515 ms by bot id=8153616825
+2025-08-02 19:35:48,871 [INFO] aiogram.event - Update id=182330064 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 19:35:53,303 [INFO] aiogram.event - Update id=182330065 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 19:35:54,446 [INFO] aiogram.event - Update id=182330066 is handled. Duration 108 ms by bot id=8153616825
+2025-08-02 19:35:54,454 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=1250, pay_types=sbp, personal_id=19
+2025-08-02 19:35:54,455 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 19:35:56,191 [INFO] api.onlypays_api - OnlyPays create_order response (sum 1250): {'success': False, 'error': 'No available requisites'}
+2025-08-02 19:35:56,191 [WARNING] api.api_manager - OnlyPays не смог создать заказ: No available requisites
+2025-08-02 19:35:56,192 [INFO] api.api_manager - Вызов create_order для PSPWare с параметрами: amount=1250, pay_types=['sbp'], personal_id=19
+2025-08-02 19:35:56,192 [INFO] api.api_manager - Попытка создания заказа через PSPWare (тип платежа: sbp -> sbp)
+2025-08-02 19:35:56,192 [INFO] api.pspware_api - [PSPWareAPI] POST https://api.pspware.space/merchant/v2/orders Headers: {'X-API-KEY': 'd6e4d661-665d-4220-a635-4d072e56735b', 'Content-Type': 'application/json'} Payload: {'sum': 1250, 'currency': 'RUB', 'order_type': 'PAY-IN', 'pay_types': ['sbp'], 'geos': ['RU'], 'merchant_id': '03d6d735-a2b7-4b75-b5fa-43be40331bf8', 'order_id': '19', 'description': 'Exchange order 19'}
+2025-08-02 19:35:56,624 [INFO] api.pspware_api - [PSPWareAPI] Response status 404 Body: {"detail":"Не удалось найти подходящие реквизиты ни по одному из способов оплаты."}
+2025-08-02 19:35:56,625 [ERROR] api.pspware_api - [PSPWareAPI] Ошибка создания заказа: {'detail': 'Не удалось найти подходящие реквизиты ни по одному из способов оплаты.'}
+2025-08-02 19:35:56,627 [WARNING] api.api_manager - PSPWare не смог создать заказ: Не удалось найти подходящие реквизиты ни по одному из способов оплаты.
+2025-08-02 19:35:56,628 [INFO] api.api_manager - Вызов create_order для Greengo с параметрами: amount=1250, pay_types=sbp, personal_id=19
+2025-08-02 19:35:56,628 [INFO] api.api_manager - Попытка создания заказа через Greengo (тип платежа: sbp -> sbp)
+2025-08-02 19:35:58,498 [INFO] api.greengo_api - Greengo create_order ответ: {'result': False, 'message': 'Нет свободных счетов'}
+2025-08-02 19:35:58,499 [WARNING] api.api_manager - Greengo не смог создать заказ: None
+2025-08-02 19:35:58,499 [WARNING] handlers.user - None order creation failed on attempt 1 for order 19: Все платежные API не сработали
+2025-08-02 19:36:04,683 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 19:36:04,685 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:36:04,938 [ERROR] __main__ - Shutdown error: 'Config' object has no attribute 'USE_WEBHOOK'
+2025-08-02 19:41:10,988 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:41:10,988 [INFO] __main__ - Database initialized successfully
+2025-08-02 19:41:11,291 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:41:11,375 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:41:11,842 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 19:41:11,842 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:41:12,101 [ERROR] __main__ - Shutdown error: 'Config' object has no attribute 'USE_WEBHOOK'
+2025-08-02 19:43:26,239 [INFO] __main__ - Starting bot in polling mode
+2025-08-02 19:43:26,243 [INFO] __main__ - Database initialized successfully
+2025-08-02 19:43:26,525 [INFO] aiogram.dispatcher - Start polling
+2025-08-02 19:43:26,614 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:43:35,889 [INFO] aiogram.event - Update id=182330067 is handled. Duration 375 ms by bot id=8153616825
+2025-08-02 19:43:37,415 [INFO] aiogram.event - Update id=182330068 is handled. Duration 125 ms by bot id=8153616825
+2025-08-02 19:43:38,502 [INFO] aiogram.event - Update id=182330069 is handled. Duration 327 ms by bot id=8153616825
+2025-08-02 19:43:39,818 [INFO] aiogram.event - Update id=182330070 is handled. Duration 344 ms by bot id=8153616825
+2025-08-02 19:43:40,850 [INFO] aiogram.event - Update id=182330071 is handled. Duration 217 ms by bot id=8153616825
+2025-08-02 19:43:42,208 [INFO] aiogram.event - Update id=182330072 is handled. Duration 155 ms by bot id=8153616825
+2025-08-02 19:43:43,387 [INFO] aiogram.event - Update id=182330073 is handled. Duration 110 ms by bot id=8153616825
+2025-08-02 19:43:43,392 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=12500, pay_types=sbp, personal_id=20
+2025-08-02 19:43:43,392 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-02 19:43:43,993 [INFO] api.onlypays_api - OnlyPays create_order response (sum 12500): {'success': True, 'data': {'id': 'aqnuc3pu2b', 'requisite': '+7 960 857 77 11', 'owner': 'Константин', 'bank': 'Тинькофф', 'payment_type': 'sbp', 'bank_id': 2}}
+2025-08-02 19:43:56,516 [INFO] api.onlypays_api - OnlyPays get_status response: {'success': True, 'data': {'id': 'aqnuc3pu2b', 'status': 'waiting', 'personal_id': '20', 'received_sum': None}}
+2025-08-02 19:43:56,637 [INFO] aiogram.event - Update id=182330074 is handled. Duration 657 ms by bot id=8153616825
+2025-08-02 19:44:13,377 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-02 19:44:13,377 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-02 19:44:13,637 [ERROR] __main__ - Shutdown error: 'Config' object has no attribute 'USE_WEBHOOK'
