@@ -477,3 +477,29 @@
 2025-08-02 19:44:13,377 [INFO] aiogram.dispatcher - Polling stopped
 2025-08-02 19:44:13,377 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
 2025-08-02 19:44:13,637 [ERROR] __main__ - Shutdown error: 'Config' object has no attribute 'USE_WEBHOOK'
+2025-08-05 19:37:49,208 [INFO] __main__ - Starting bot in polling mode
+2025-08-05 19:37:49,229 [INFO] __main__ - Database initialized successfully
+2025-08-05 19:37:49,520 [INFO] aiogram.dispatcher - Start polling
+2025-08-05 19:37:49,621 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-05 19:37:53,296 [INFO] aiogram.event - Update id=182330077 is handled. Duration 313 ms by bot id=8153616825
+2025-08-05 19:37:54,936 [INFO] aiogram.event - Update id=182330078 is handled. Duration 108 ms by bot id=8153616825
+2025-08-05 19:37:56,256 [INFO] aiogram.event - Update id=182330079 is handled. Duration 438 ms by bot id=8153616825
+2025-08-05 19:37:58,511 [INFO] aiogram.event - Update id=182330080 is handled. Duration 516 ms by bot id=8153616825
+2025-08-05 19:38:05,134 [INFO] aiogram.event - Update id=182330081 is handled. Duration 172 ms by bot id=8153616825
+2025-08-05 19:38:06,775 [INFO] aiogram.event - Update id=182330082 is handled. Duration 172 ms by bot id=8153616825
+2025-08-05 19:38:08,148 [INFO] aiogram.event - Update id=182330083 is handled. Duration 202 ms by bot id=8153616825
+2025-08-05 19:38:08,153 [INFO] api.api_manager - Вызов create_order для OnlyPays с параметрами: amount=1250, pay_types=sbp, personal_id=21
+2025-08-05 19:38:08,153 [INFO] api.api_manager - Попытка создания заказа через OnlyPays (тип платежа: sbp -> sbp)
+2025-08-05 19:38:11,394 [INFO] api.onlypays_api - OnlyPays create_order response (sum 1250): {'success': False, 'error': 'No available requisites'}
+2025-08-05 19:38:11,396 [WARNING] api.api_manager - OnlyPays не смог создать заказ: No available requisites
+2025-08-05 19:38:11,397 [INFO] api.api_manager - Вызов create_order для PSPWare с параметрами: amount=1250, pay_types=['sbp'], personal_id=21
+2025-08-05 19:38:11,398 [INFO] api.api_manager - Попытка создания заказа через PSPWare (тип платежа: sbp -> sbp)
+2025-08-05 19:38:11,398 [INFO] api.pspware_api - [PSPWareAPI] POST https://api.pspware.space/merchant/v2/orders Headers: {'X-API-KEY': 'd6e4d661-665d-4220-a635-4d072e56735b', 'Content-Type': 'application/json'} Payload: {'sum': 1250, 'currency': 'RUB', 'order_type': 'PAY-IN', 'pay_types': ['sbp'], 'geos': ['RU'], 'merchant_id': '03d6d735-a2b7-4b75-b5fa-43be40331bf8', 'order_id': '21', 'description': 'Exchange order 21'}
+2025-08-05 19:38:11,872 [INFO] api.pspware_api - [PSPWareAPI] Response status 404 Body: {"detail":"Не удалось найти подходящие реквизиты ни по одному из способов оплаты."}
+2025-08-05 19:38:11,874 [ERROR] api.pspware_api - [PSPWareAPI] Ошибка создания заказа: {'detail': 'Не удалось найти подходящие реквизиты ни по одному из способов оплаты.'}
+2025-08-05 19:38:11,876 [WARNING] api.api_manager - PSPWare не смог создать заказ: Не удалось найти подходящие реквизиты ни по одному из способов оплаты.
+2025-08-05 19:38:11,877 [INFO] api.api_manager - Вызов create_order для Greengo с параметрами: amount=1250, pay_types=sbp, personal_id=21
+2025-08-05 19:38:11,877 [INFO] api.api_manager - Попытка создания заказа через Greengo (тип платежа: sbp -> sbp)
+2025-08-05 19:38:14,410 [INFO] api.greengo_api - Greengo create_order ответ: {'result': False, 'message': 'Нет свободных счетов'}
+2025-08-05 19:38:14,410 [WARNING] api.api_manager - Greengo не смог создать заказ: None
+2025-08-05 19:38:14,411 [WARNING] handlers.user - None order creation failed on attempt 1 for order 21: Все платежные API не сработали

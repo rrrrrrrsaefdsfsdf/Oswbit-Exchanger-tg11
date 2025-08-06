@@ -12,6 +12,8 @@ class Config:
     PSPWARE_API_KEY = os.getenv("PSPWARE_API_KEY")
     PSPWARE_MERCHANT_ID = os.getenv("PSPWARE_MERCHANT_ID")
     GREENGO_API_SECRET = os.getenv("GREENGO_API_SECRET")
+    NICEPAY_MERCHANT_KEY = os.getenv("NICEPAY_MERCHANT_KEY")
+    NICEPAY_MERCHANT_TOKEN_KEY = os.getenv("NICEPAY_MERCHANT_TOKEN_KEY")
     DATABASE_URL = os.getenv("DATABASE_URL", "oswaldo_exchanger.db")
     ADMIN_USER_ID = int(os.getenv("ADMIN_USER_ID", 0))
     ADMIN_CHAT_ID = int(os.getenv("ADMIN_CHAT_ID", 0))

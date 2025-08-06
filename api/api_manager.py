@@ -1,5 +1,6 @@
 import logging
 from typing import List, Dict, Any, Optional
+from nicepay_api import NicePayAPI
 
 logger = logging.getLogger(__name__)
 
