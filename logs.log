@@ -503,3 +503,73 @@
 2025-08-05 19:38:14,410 [INFO] api.greengo_api - Greengo create_order ответ: {'result': False, 'message': 'Нет свободных счетов'}
 2025-08-05 19:38:14,410 [WARNING] api.api_manager - Greengo не смог создать заказ: None
 2025-08-05 19:38:14,411 [WARNING] handlers.user - None order creation failed on attempt 1 for order 21: Все платежные API не сработали
+2025-08-06 19:32:20,679 [INFO] __main__ - Starting bot in polling mode
+2025-08-06 19:32:20,706 [INFO] __main__ - Database initialized successfully
+2025-08-06 19:32:20,993 [INFO] aiogram.dispatcher - Start polling
+2025-08-06 19:32:21,065 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-06 19:32:29,990 [INFO] aiogram.event - Update id=182330092 is handled. Duration 375 ms by bot id=8153616825
+2025-08-06 19:32:31,559 [INFO] aiogram.event - Update id=182330093 is handled. Duration 139 ms by bot id=8153616825
+2025-08-06 19:32:32,813 [INFO] aiogram.event - Update id=182330094 is handled. Duration 343 ms by bot id=8153616825
+2025-08-06 19:32:35,064 [INFO] aiogram.event - Update id=182330095 is handled. Duration 359 ms by bot id=8153616825
+2025-08-06 19:32:36,432 [INFO] aiogram.event - Update id=182330096 is handled. Duration 156 ms by bot id=8153616825
+2025-08-06 19:32:43,885 [INFO] aiogram.event - Update id=182330097 is handled. Duration 125 ms by bot id=8153616825
+2025-08-06 19:32:45,191 [INFO] aiogram.event - Update id=182330098 is handled. Duration 109 ms by bot id=8153616825
+2025-08-06 19:32:46,976 [INFO] api.onlypays_api - OnlyPays create_order response (sum 1250): {'success': True, 'data': {'id': 'n0seey03wi', 'requisite': '+7 989 444 50 01', 'owner': 'Сулейманов шихали ', 'bank': 'Озон банк', 'payment_type': 'sbp', 'bank_id': 13}}
+2025-08-06 19:33:25,900 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-06 19:33:25,901 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-06 19:33:26,163 [ERROR] __main__ - Shutdown error: 'Config' object has no attribute 'USE_WEBHOOK'
+2025-08-06 19:35:07,335 [INFO] __main__ - Starting bot in polling mode
+2025-08-06 19:35:07,340 [INFO] __main__ - Database initialized successfully
+2025-08-06 19:35:07,565 [INFO] aiogram.dispatcher - Start polling
+2025-08-06 19:35:07,634 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-06 19:35:16,504 [INFO] aiogram.event - Update id=182330099 is handled. Duration 329 ms by bot id=8153616825
+2025-08-06 19:35:17,994 [INFO] aiogram.event - Update id=182330100 is handled. Duration 109 ms by bot id=8153616825
+2025-08-06 19:35:19,260 [INFO] aiogram.event - Update id=182330101 is handled. Duration 329 ms by bot id=8153616825
+2025-08-06 19:35:20,801 [INFO] aiogram.event - Update id=182330102 is handled. Duration 295 ms by bot id=8153616825
+2025-08-06 19:35:21,781 [INFO] aiogram.event - Update id=182330103 is handled. Duration 94 ms by bot id=8153616825
+2025-08-06 19:35:26,296 [INFO] aiogram.event - Update id=182330104 is handled. Duration 125 ms by bot id=8153616825
+2025-08-06 19:35:27,858 [INFO] aiogram.event - Update id=182330105 is handled. Duration 125 ms by bot id=8153616825
+2025-08-06 19:35:32,167 [INFO] api.onlypays_api - OnlyPays create_order response (sum 1250): {'success': False, 'error': 'No available requisites'}
+2025-08-06 19:35:32,168 [WARNING] api.api_manager - OnlyPays не смог создать заказ: No available requisites
+2025-08-06 19:35:32,169 [INFO] api.pspware_api - [PSPWareAPI] POST https://api.pspware.space/merchant/v2/orders Headers: {'X-API-KEY': 'd6e4d661-665d-4220-a635-4d072e56735b', 'Content-Type': 'application/json'} Payload: {'sum': 1250, 'currency': 'RUB', 'order_type': 'PAY-IN', 'pay_types': ['sbp'], 'geos': ['RU'], 'merchant_id': '03d6d735-a2b7-4b75-b5fa-43be40331bf8', 'order_id': '23', 'description': 'Exchange order 23'}
+2025-08-06 19:35:32,797 [INFO] api.pspware_api - [PSPWareAPI] Response status 404 Body: {"detail":"Не удалось найти подходящие реквизиты ни по одному из способов оплаты."}
+2025-08-06 19:35:32,798 [ERROR] api.pspware_api - [PSPWareAPI] Ошибка создания заказа: {'detail': 'Не удалось найти подходящие реквизиты ни по одному из способов оплаты.'}
+2025-08-06 19:35:32,798 [WARNING] api.api_manager - PSPWare не смог создать заказ: Не удалось найти подходящие реквизиты ни по одному из способов оплаты.
+2025-08-06 19:35:33,193 [ERROR] api.greengo_api - Greengo create_order ошибка: 0, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url=URL('https://api.greengo.cc/api/v2/order/create')
+2025-08-06 19:35:33,194 [WARNING] api.api_manager - Greengo не смог создать заказ: 0, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url=URL('https://api.greengo.cc/api/v2/order/create')
+2025-08-06 19:35:33,266 [ERROR] api.nicepay_api - NicePay create_payment error: Cannot connect to host api.nicepay.io:443 ssl:default [getaddrinfo failed]
+2025-08-06 19:35:33,267 [WARNING] api.api_manager - NicePay не смог создать заказ: Cannot connect to host api.nicepay.io:443 ssl:default [getaddrinfo failed]
+2025-08-06 19:35:33,377 [WARNING] handlers.user - Ошибка создания платежа API: {'success': False, 'error': 'Все платежные API не сработали', 'api_name': None}
+2025-08-06 19:35:38,056 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-06 19:35:38,056 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-06 19:35:38,323 [ERROR] __main__ - Shutdown error: 'Config' object has no attribute 'USE_WEBHOOK'
+2025-08-06 19:39:34,140 [INFO] __main__ - Starting bot in polling mode
+2025-08-06 19:39:34,140 [INFO] __main__ - Database initialized successfully
+2025-08-06 19:39:34,423 [INFO] aiogram.dispatcher - Start polling
+2025-08-06 19:39:34,508 [INFO] aiogram.dispatcher - Run polling for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-06 19:39:41,868 [INFO] aiogram.event - Update id=182330106 is handled. Duration 280 ms by bot id=8153616825
+2025-08-06 19:39:43,140 [INFO] aiogram.event - Update id=182330107 is handled. Duration 454 ms by bot id=8153616825
+2025-08-06 19:39:44,512 [INFO] aiogram.event - Update id=182330108 is handled. Duration 406 ms by bot id=8153616825
+2025-08-06 19:39:45,500 [INFO] aiogram.event - Update id=182330109 is handled. Duration 109 ms by bot id=8153616825
+2025-08-06 19:39:47,209 [INFO] aiogram.event - Update id=182330110 is handled. Duration 125 ms by bot id=8153616825
+2025-08-06 19:39:48,577 [INFO] aiogram.event - Update id=182330111 is handled. Duration 109 ms by bot id=8153616825
+2025-08-06 19:40:00,059 [INFO] api.onlypays_api - OnlyPays create_order response (sum 1250): {'success': False, 'error': 'No available requisites'}
+2025-08-06 19:40:00,060 [WARNING] api.api_manager - OnlyPays не смог создать заказ: No available requisites
+2025-08-06 19:40:00,061 [INFO] api.pspware_api - [PSPWareAPI] POST https://api.pspware.space/merchant/v2/orders Headers: {'X-API-KEY': 'd6e4d661-665d-4220-a635-4d072e56735b', 'Content-Type': 'application/json'} Payload: {'sum': 1250, 'currency': 'RUB', 'order_type': 'PAY-IN', 'pay_types': ['sbp'], 'geos': ['RU'], 'merchant_id': '03d6d735-a2b7-4b75-b5fa-43be40331bf8', 'order_id': '24', 'description': 'Exchange order 24'}
+2025-08-06 19:40:00,432 [INFO] api.pspware_api - [PSPWareAPI] Response status 404 Body: {"detail":"Не удалось найти подходящие реквизиты ни по одному из способов оплаты."}
+2025-08-06 19:40:00,433 [ERROR] api.pspware_api - [PSPWareAPI] Ошибка создания заказа: {'detail': 'Не удалось найти подходящие реквизиты ни по одному из способов оплаты.'}
+2025-08-06 19:40:00,435 [WARNING] api.api_manager - PSPWare не смог создать заказ: Не удалось найти подходящие реквизиты ни по одному из способов оплаты.
+2025-08-06 19:40:00,729 [ERROR] api.greengo_api - Greengo create_order HTTP 500: {
+  "result": false,
+  "message": "Ошибка запроcа"
+}
+2025-08-06 19:40:00,730 [WARNING] api.api_manager - Greengo не смог создать заказ: HTTP 500: {
+  "result": false,
+  "message": "Ошибка запроcа"
+}
+2025-08-06 19:40:00,867 [ERROR] api.nicepay_api - NicePay create_payment error: Cannot connect to host api.nicepay.io:443 ssl:default [getaddrinfo failed]
+2025-08-06 19:40:00,868 [WARNING] api.api_manager - NicePay не смог создать заказ: Cannot connect to host api.nicepay.io:443 ssl:default [getaddrinfo failed]
+2025-08-06 19:40:01,069 [WARNING] handlers.user - Ошибка создания платежа API: {'success': False, 'error': 'Все платежные API не сработали', 'api_name': None}
+2025-08-06 19:40:14,782 [INFO] aiogram.dispatcher - Polling stopped
+2025-08-06 19:40:14,782 [INFO] aiogram.dispatcher - Polling stopped for bot @OswaldoExchanger_bot id=8153616825 - 'Oswbit Exchanger'
+2025-08-06 19:40:15,036 [ERROR] __main__ - Shutdown error: 'Config' object has no attribute 'USE_WEBHOOK'

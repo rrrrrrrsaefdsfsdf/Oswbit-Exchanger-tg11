@@ -25,8 +25,10 @@ from handlers.operator import (
 from api.onlypays_api import OnlyPaysAPI
 from api.pspware_api import PSPWareAPI
 from api.greengo_api import GreengoAPI
-
+from api.nicepay_api import  NicePayAPI
 from api.api_manager import PaymentAPIManager
+
+
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -40,19 +42,16 @@ onlypays_api = OnlyPaysAPI(
 )
 pspware_api = PSPWareAPI()
 greengo_api = GreengoAPI()
+nicepay_api = NicePayAPI()
 
-# Инициализация API Manager
+# Инициализация API Manager с NicePay
 payment_api_manager = PaymentAPIManager([
     {"api": onlypays_api, "name": "OnlyPays"},
     {"api": pspware_api, "name": "PSPWare", "pay_type_mapping": {"card": "c2c", "sbp": "sbp"}},
-    {"api": greengo_api, "name": "Greengo", "pay_type_mapping": {"card": "card", "sbp": "sbp"}}
+    {"api": greengo_api, "name": "Greengo", "pay_type_mapping": {"card": "card", "sbp": "sbp"}},
+    {"api": nicepay_api, "name": "NicePay", "pay_type_mapping": {}}
 ])
 
-
-
-
-
-# PAY_TYPE_MAPPING is now handled within the API Manager for each API
 class ExchangeStates(StatesGroup):
     waiting_for_amount = State()
     waiting_for_btc_address = State()
@@ -63,6 +62,8 @@ class ExchangeStates(StatesGroup):
     waiting_for_note = State()
 
 db = Database(config.DATABASE_URL)
+
+
 
 async def show_main_menu(message_or_callback, is_callback=False):
     default_welcome = (
@@ -486,73 +487,125 @@ async def request_requisites_with_retries(order_id: int, user_id: int, payment_t
     if not order:
         logger.error(f"Order not found: {order_id}")
         return False
-    
-    is_sell_order = not order.get('btc_address')
-    
+
+    is_sell_order = not bool(order.get('btc_address'))
+
     for attempt in range(1, max_attempts + 1):
         try:
+            amount = int(await db.get_order_total_amount(order_id))
             api_response = await payment_api_manager.create_order(
-                amount=int(await db.get_order_total_amount(order_id)),
+                amount=amount,
                 payment_type=payment_type,
                 personal_id=str(order_id),
                 is_sell_order=is_sell_order
             )
-            
-            if api_response.get('success'):
-                payment_data = api_response['data']
+
+            if api_response.get('success') or api_response.get('resultCode') == '0000':
+                payment_data = api_response.get('data', {})
                 api_name = api_response.get('api_name')
-                requisites_text = (
-                    f"{'💳 Карта' if payment_type == 'card' else '📱 Телефон'}: {payment_data['requisite']}\n"
-                    f"👤 Получатель: {payment_data['owner']}\n"
-                    f"🏛 Банк: {payment_data['bank']}"
-                )
-                update_data = {
-                    'requisites': requisites_text,
-                    'status': 'waiting',
-                    'personal_id': payment_data['id']
-                }
-                if api_name == 'OnlyPays':
-                    update_data['onlypays_id'] = payment_data['id']
-                elif api_name == 'PSPWare':
-                    update_data['pspware_id'] = payment_data['id']
-                elif api_name == 'Greengo':
-                    update_data['greengo_id'] = payment_data['id']
-                
-                await db.update_order(order_id, **update_data)
+                total_amount = order.get('total_amount') or amount
+                btc_amount = order.get('amount_btc', 0)
+                rate = order.get('rate', 0)
+                direction = "покупка" if order.get('btc_address') else "продажа"
+
+                if api_name == 'OnlyPays' or api_name == 'PSPWare' or api_name == 'Greengo':
+                    requisite = payment_data.get('requisite', '—')
+                    owner = payment_data.get('owner', '—')
+                    bank = payment_data.get('bank', '—')
+                    text = (
+                        f"💰 <b>Информация для оплаты ({api_name}):</b>\n\n"
+                        f"Сумма к оплате: <b>{total_amount} ₽</b>\n"
+                        f"Курс: <b>{rate} ₽ за 1 BTC</b>\n"
+                        f"Получаете: <b>{btc_amount} BTC</b> ({direction})\n\n"
+                        f"🏦 Реквизиты оплаты:\n"
+                        f"💳 Карта: <b>{requisite}</b>\n"
+                        f"👤 Получатель: <b>{owner}</b>\n"
+                        f"🏛 Банк: <b>{bank}</b>\n\n"
+                        f"После оплаты подтвердите операцию"
+                    )
+                    update_fields = {
+                        'requisites': text,
+                        'status': 'waiting',
+                        'personal_id': payment_data.get('id')
+                    }
+                    if api_name == 'OnlyPays':
+                        update_fields['onlypays_id'] = payment_data.get('id')
+                    elif api_name == 'PSPWare':
+                        update_fields['pspware_id'] = payment_data.get('id')
+                    elif api_name == 'Greengo':
+                        update_fields['greengo_id'] = payment_data.get('id')
+                    await db.update_order(order_id, **update_fields)
+
+                elif api_name == 'NicePay':
+                    payment_url = payment_data.get('payment_url') or api_response.get('paymentUrl')
+                    text = (
+                        f"💰 <b>Информация для оплаты (NicePay):</b>\n\n"
+                        f"Сумма к оплате: <b>{total_amount} ₽</b>\n"
+                        f"Курс: <b>{rate} ₽ за 1 BTC</b>\n"
+                        f"Получаете: <b>{btc_amount} BTC</b> ({direction})\n\n"
+                        f"Оплатите по ссылке:\n"
+                        f"{payment_url or 'ссылка недоступна'}\n\n"
+                        f"После оплаты подтвердите операцию"
+                    )
+                    await db.update_order(
+                        order_id,
+                        requisites=text,
+                        status='waiting',
+                        personal_id=str(order_id)
+                    )
+                else:
+                    text = (
+                        f"💰 <b>Реквизиты для оплаты:</b>\n"
+                        f"Сумма к оплате: <b>{total_amount} ₽</b>\n"
+                        f"Курс: <b>{rate} ₽ за 1 BTC</b>\n"
+                        f"Получаете: <b>{btc_amount} BTC</b>\n\n"
+                        "Реквизиты не найдены, обратитесь в поддержку."
+                    )
+                    await db.update_order(order_id, requisites=text, status='waiting', personal_id=str(order_id))
+
                 await bot.send_message(
                     user_id,
-                    f"💳 <b>Ваша заявка #{payment_data['id']} подтверждена!</b>\n\n"
-                    f"💰 К оплате: <b>{await db.get_order_total_amount(order_id):,.0f} ₽</b>\n\n"
-                    f"📋 <b>Реквизиты для оплаты:</b>\n{requisites_text}\n\n"
-                    f"⚠️ <b>Важно:</b>\n"
-                    f"• Переведите точную сумму\n"
-                    f"• После оплаты ожидайте подтверждения\n"
-                    f"• Bitcoin будет отправлен автоматически\n\n"
-                    f"⏰ Заявка действительна 30 минут",
-                    parse_mode="HTML",
-                    reply_markup=ReplyKeyboards.order_menu()
+                    text,
+                    reply_markup=InlineKeyboards.order_confirmation(order_id),
+                    parse_mode='HTML'
                 )
-                return True
+                break
             else:
-                logger.warning(f"{api_response.get('api_name')} order creation failed on attempt {attempt} for order {order_id}: {api_response.get('error')}")
-        
+                err_msg = api_response.get('error') or api_response.get('resultDesc', 'Неизвестная ошибка')
+                await bot.send_message(user_id, f"Ошибка создания платежа: {err_msg}")
+                logger.warning(f"Ошибка создания платежа API: {api_response}")
+
         except Exception as e:
-            logger.error(f"Attempt {attempt} failed for order {order_id}: {e}")
-        
+            logger.error(f"Исключение при создании платежа: {e}")
+
         if attempt < max_attempts:
             await asyncio.sleep(delay_sec)
+    else:
+        await bot.send_message(user_id, "Не удалось получить реквизиты оплаты. Попробуйте позже.")
 
-    await db.update_order(order_id, status='error_requisites')
-    error_msg = "❌ Извините, реквизиты для вашей заявки временно недоступны.\nПожалуйста, попробуйте создать заявку позже."
-    if is_sell_order:
-        error_msg = "❌ Извините, сервис продажи временно недоступен.\nПожалуйста, попробуйте позже."
-    
-    await bot.send_message(
-        user_id,
-        error_msg,
-        reply_markup=ReplyKeyboards.main_menu()
-    )
-    return False
+
+
+
+
+
+
+async def check_order_status(order_id: int, api_name: str):
+    status_response = await payment_api_manager.get_order_status(str(order_id), api_name)
+    if status_response.get('success') or status_response.get('resultCode') == "0000":
+        new_status = 'completed' if status_response.get('resultCode') == '0000' else 'pending'
+        await db.update_order(order_id, status=new_status)
+    return status_response
+
+
+async def cancel_order_payment(order_id: int, api_name: str):
+    cancel_response = await payment_api_manager.cancel_order(str(order_id), api_name)
+    if cancel_response.get('success') or cancel_response.get('resultCode') == "0000":
+        await db.update_order(order_id, status="canceled")
+    return cancel_response
+
+
+
+
 
 @router.callback_query(F.data.startswith(("confirm_order_", "cancel_order_")))
 async def order_confirmation_handler(callback: CallbackQuery, state: FSMContext):
